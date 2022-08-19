@@ -6,8 +6,9 @@ const USERS = require("../schemas/user");
 // TASK 1 : 게시글 조회 with GET ('/api/posts')
 exports.getPostsAll = async (req, res) => {
   try {
-    const { _id } = res.locals.user;
-    const allPostsOnFeed = await POSTS.find({ user_id: _id });
+    const { _id, FOLLOWING } = res.locals.user;
+    const allPostsOnFeed = await POSTS.find({ user_id: [...FOLLOWING, _id] });
+
     res.status(200).json({ statusCode: 200, allPostsOnFeed });
     return;
   } catch (error) {
@@ -24,11 +25,13 @@ exports.getPostsAll = async (req, res) => {
 // TASK 2 : 게시글 작성 with POST ('/api/posts')
 exports.createPost = async (req, res) => {
   try {
-    const { _id } = res.locals.user;
+    const { _id, USER_ID } = res.locals.user;
+
     // 포스팅 작업
     const { CONTENT, POST_PHOTO_URL } = req.body;
     const createdPost = await POSTS.create({
       user_id: _id,
+      USER_ID,
       CONTENT,
       POST_PHOTO: POST_PHOTO_URL,
       TIMESTAMPS: new Date(),
@@ -128,7 +131,7 @@ exports.deletePost = async (req, res) => {
 
     console.log(deletedPost); //{ acknowledged: true, deletedCount: 1 }
 
-    res.status(200).json({ statusCode: 20, deletedPost_id: post_id });
+    res.status(200).json({ statusCode: 200, deletedPost_id: post_id });
     return;
   } catch (error) {
     const message = `${req.method} ${req.originalUrl} : ${error.message}`;
@@ -138,4 +141,11 @@ exports.deletePost = async (req, res) => {
       errReason: message,
     });
   }
+};
+
+// ------------------
+// function : _id로 USER_ID 찾기
+getUserIdByid = async (_id) => {
+  const { USER_ID } = await USERS.findOne({ _id });
+  return USER_ID;
 };
