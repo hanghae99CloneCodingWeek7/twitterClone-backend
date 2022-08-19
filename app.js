@@ -6,8 +6,7 @@ const Http = require("http");
 const Https = require("https");
 
 // 환경변수 모듈 불러오기 (process.env. + 변수 설정) -> process.env. 객체 사용 가능
-const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv").config();
 
 // express 객체 선언, 각종 middleware 설치
 const app = express();
@@ -23,8 +22,8 @@ const corsOption = {
 app.use(cors(corsOption));
 
 // mongoDB에 연결
-const connect = require("./schemas/index.js");
-connect();
+const connectDB = require("./schemas");
+
 // "/api" path로 연결하는 라우터 연결 (우선 routes/index.js로)
 const indexRouter = require("./routes/index.js");
 app.use("/api", [indexRouter]);
@@ -42,12 +41,21 @@ const http_port = process.env.HTTP_PORT || 3000;
 const https_port = process.env.HTTPS_PORT || 443;
 
 // SERVER LISTEN
-http.listen(http_port, () => {
-  console.log(`Start listening HTTP Server on ${http_port}`);
-});
+const start = async () => {
+  try {
+    http.listen(http_port, () => {
+      console.log(`Start listening HTTP Server on ${http_port}`);
+    });
 
-https.listen(https_port, () => {
-  console.log(`Start listening HTTPS Server on ${https_port}`);
-});
+    https.listen(https_port, () => {
+      console.log(`Start listening HTTPS Server on ${https_port}`);
+    });
+
+    await connectDB.connectDB(process.env.MONGO_DB_ACCESS);
+  } catch (error) {
+    console.log(error);
+  }
+};
+start();
 
 module.exports = app;

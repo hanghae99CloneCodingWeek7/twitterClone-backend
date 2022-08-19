@@ -21,6 +21,9 @@ router.post("/signup", async (req, res) => {
 router.post("/login", async (req, res) => {
   res.json({ data: "POST /api/login" });
 });
+router.get("/", async (req, res) => {
+  res.send("Hello world");
+});
 
 // 이 파일의 router 객체를 외부에 공개합니다.
 module.exports = router;
