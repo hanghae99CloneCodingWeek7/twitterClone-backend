@@ -24,5 +24,6 @@ exports.connectDB = (url) => {
   return mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    ignoreUndefined: true,
   });
 };
