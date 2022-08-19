@@ -142,10 +142,3 @@ exports.deletePost = async (req, res) => {
     });
   }
 };
-
-// ------------------
-// function : _id로 USER_ID 찾기
-getUserIdByid = async (_id) => {
-  const { USER_ID } = await USERS.findOne({ _id });
-  return USER_ID;
-};
