@@ -10,7 +10,6 @@ const USERS = require("../schemas/user");
 exports.registerPage = async (req, res) => {
   res.render("register");
 };
-
 exports.register = async (req, res) => {
   const signupSchema = Joi.object({
     USER_ID: Joi.string().min(6).max(12).alphanum().required(),
@@ -73,7 +72,6 @@ exports.register = async (req, res) => {
 exports.loginPage = async (req, res) => {
   res.send("This is login page");
 };
-
 exports.login = async (req, res) => {
   const loginSchema = Joi.object({
     USER_ID: Joi.string().min(6).max(12).alphanum().required(),
@@ -114,6 +112,28 @@ exports.login = async (req, res) => {
       statusCode: 400,
       errReason: message,
       message: "입력하신 아이디와 패스워드를 확인해주세요.",
+    });
+  }
+};
+
+exports.authMiddleware = async (req, res, next) => {
+  try {
+    console.log("------ 🤔 Authorization Checking ------");
+
+    let user = await USERS.findOne({ USER_ID: "tester2" }); // 임시 통과
+
+    console.log("------ ✅  Authorization Checked ------");
+
+    // 다 통과하면 토큰을 복호화하여 user 정보를 다음 미들웨어가 사용할 수 있는 형태로 넘겨준다.
+    res.locals.user = user;
+    next();
+    return;
+
+    // 에러 생기면 에러메세지
+  } catch (e) {
+    return res.send({
+      statusCode: 400,
+      message: "로그인 후 사용하세요",
     });
   }
 };
