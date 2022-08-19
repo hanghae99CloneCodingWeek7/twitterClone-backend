@@ -1,5 +1,6 @@
 // 이 파일에서 사용할 post DB가 어떻게 생겼는지 불러옵니다. (schema/post.js)
 const POSTS = require("../schemas/post");
+const USERS = require("../schemas/user");
 
 // ------------------
 // TASK 1 : 게시글 조회 with GET ('/api/posts')
@@ -49,11 +50,28 @@ exports.createPost = async (req, res) => {
 // TASK 3 : 게시글 수정 with PUT ('/api/posts')
 exports.updatePost = async (req, res) => {
   try {
-    // const { _id } = res.locals.user;
-    // // 본인확인은 authMiddleware에서 완료
+    const { _id } = res.locals.user;
+    const { post_id, CONTENT, POST_PHOTO_URL } = req.body;
+
+    // 본인확인
+    const postExist = await POSTS.findOne({ _id: post_id });
+    const foundPost = await POSTS.findOne({ _id: post_id, user_id: _id });
+
+    if (!postExist) {
+      res.send({
+        statusCode: 400,
+        errReason: "게시글이 없습니다.",
+      });
+      return;
+    } else if (!foundPost) {
+      res.send({
+        statusCode: 400,
+        errReason: "권한이 없습니다.",
+      });
+      return;
+    }
 
     // update 작업
-    const { post_id, CONTENT, POST_PHOTO_URL } = req.body;
     const updatedPost = await POSTS.findOneAndUpdate(
       {
         _id: post_id,
@@ -82,11 +100,28 @@ exports.updatePost = async (req, res) => {
 // TASK 4 : 게시글 삭제 with DELETE ('/api/posts')
 exports.deletePost = async (req, res) => {
   try {
-    // const { _id } = res.locals.user;
-    // // 본인확인은 authMiddleware에서 완료
+    const { _id } = res.locals.user;
+    const { post_id } = req.body;
+
+    // 본인확인
+    const postExist = await POSTS.findOne({ _id: post_id });
+    const foundPost = await POSTS.findOne({ _id: post_id, user_id: _id });
+
+    if (!postExist) {
+      res.send({
+        statusCode: 400,
+        errReason: "게시글이 없습니다.",
+      });
+      return;
+    } else if (!foundPost) {
+      res.send({
+        statusCode: 400,
+        errReason: "권한이 없습니다.",
+      });
+      return;
+    }
 
     // delete 작업
-    const { post_id } = req.body;
     const deletedPost = await POSTS.deleteOne({
       _id: post_id,
     });
