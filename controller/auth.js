@@ -52,14 +52,13 @@ exports.register = async (req, res) => {
     const createdUser = await USERS.create({
       USER_ID,
       PASSWORD: hashedPassword,
-      PASSWORD_SALT,
       EMAIL,
       TIMESTAMPS: new Date(),
     });
 
     return res
-      .status(200)
-      .send({ statusCode: 200, createdUser_id: createdUser._id });
+      .status(201)
+      .send({ statusCode: 201, createdUser_id: createdUser._id });
   } catch (error) {
     const message = `${req.method} ${req.originalUrl} : ${error.message}`;
     return res.send({
@@ -76,5 +75,45 @@ exports.loginPage = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  res.send("This is login page");
+  const loginSchema = Joi.object({
+    USER_ID: Joi.string().min(6).max(12).alphanum().required(),
+    PASSWORD: Joi.string().min(5).max(12).alphanum().required(),
+  });
+
+  try {
+    // joi 객체의 스키마를 잘 통과했는지 확인
+    const { USER_ID, PASSWORD } = await loginSchema.validateAsync(req.body);
+
+    if (req.cookies.token) {
+      return res.send({
+        statusCode: 400,
+        message: "이미 로그인이 되어있습니다.",
+      });
+    }
+
+    const userOnDB = await USERS.findOne({ USER_ID });
+    const isSuccess = bcrypt.compareSync(PASSWORD, userOnDB.PASSWORD); // True or False
+
+    if (isSuccess) {
+      return res
+        .cookie("token", "로그인 성공", {
+          sameSite: "Strict",
+          maxAge: 30000, // 30sec
+          httpOnly: true,
+        })
+        .status(200)
+        .send({
+          statusCode: 200,
+          token: "로그인 성공",
+          message: "로그인에 성공했습니다.",
+        });
+    }
+  } catch (error) {
+    const message = `${req.method} ${req.originalUrl} : ${error.message}`;
+    return res.send({
+      statusCode: 400,
+      errReason: message,
+      message: "입력하신 아이디와 패스워드를 확인해주세요.",
+    });
+  }
 };
