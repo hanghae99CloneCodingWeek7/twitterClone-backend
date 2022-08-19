@@ -10,8 +10,8 @@
 
 ```bash
 
-git clone ~
-cd ~
+git clone https://github.com/hanghae99CloneCodingWeek7/twitterclone-backend.git
+cd twitterclone-backend
 npm install
 ## .env 생성하셔야 합니다.
 
