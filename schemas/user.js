@@ -10,6 +10,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  PASSWORD_SALT: {
+    type: String,
+    required: true,
+  },
   EMAIL: {
     type: String,
     required: true,
