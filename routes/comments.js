@@ -4,23 +4,20 @@
 // 이 파일에서 사용할 라우터 객체 생성
 const express = require("express");
 const router = express.Router();
-
+const comments = require("../controller/comments");
 // 이 파일에서 사용할 post DB가 어떻게 생겼는지 불러옵니다. (schema/post.js)
-const COMMENTS = require("../schemas/comment.js");
+
+
 
 //  ---------------- 여기부터 API 시작 ----------------
 
-// ------------------
-// TASK 1 : 게시글 조회 with GET ('/api/comments')
-router.get("/", async (req, res) => {
-  res.json({ data: "GET /api/comments" });
-});
 
-// ------------------
-// TASK 2 : 게시글 작성 with POST ('/api/comments')
-router.post("/", async (req, res) => {
-  res.json({ data: "POST /api/comments" });
-});
+// TASK 1 : 댓글 조회 with GET ('/api/comments')
+router.get("/:postId",comments.getAllComments)
+// TASK 2 : 댓글 작성 with POST ('/api/comments')
+router.post("/:postId", comments.getCreateComments)
+// TASK 3 : 댓글 수정 with POST ('/api/comments')
+router.post("/:postId", comments.getUpdateComments)
 
 // 이 파일의 router 객체를 외부에 공개합니다.
 module.exports = router;
