@@ -10,9 +10,10 @@ const auth = require("../controller/auth");
 router.get("/", async (req, res) => {
   res.render("main");
 });
+
 // TASK 2 : 회원가입
 router.route("/signup").get(auth.registerPage).post(auth.register);
-// ------------------
+
 // TASK 3 : 로그인
 router.route("/login").get(auth.loginPage).post(auth.login);
 
