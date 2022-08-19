@@ -15,6 +15,7 @@ const USERS = require("../schemas/user");
 exports.registerPage = async (req, res) => {
   res.render("register");
 };
+
 exports.register = async (req, res) => {
   res.send("This is register page");
 };
