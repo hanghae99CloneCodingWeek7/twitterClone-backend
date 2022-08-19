@@ -6,9 +6,14 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const Http = require("http");
 const Https = require("https");
+const passport = require("passport");
+const session = require("express-session");
 
 // 환경변수 모듈 불러오기 (process.env. + 변수 설정) -> process.env. 객체 사용 가능
 require("dotenv").config();
+
+//passport config
+// require("./passport")(passport);
 
 // express 객체 선언, 각종 middleware 설치
 const app = express();
@@ -17,6 +22,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
+
+//Sessions
+app.use(
+  session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: true },
+  })
+);
+
+//Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // CORS OPTION 적용
 const corsOption = {
