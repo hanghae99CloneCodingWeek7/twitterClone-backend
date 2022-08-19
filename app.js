@@ -31,23 +31,23 @@ app.use("/api", [indexRouter]);
 
 // HTTPS 연결 관련
 const fs = require("fs");
-const options = {
-  key: fs.readFileSync("./ssl/www_myspaceti.me.key"),
-  cert: fs.readFileSync("./ssl/www_myspaceti.me_cert.crt"),
-  ca: fs.readFileSync("./ssl/www_myspaceti.me_chain_cert.crt"),
-};
+// const options = {
+//   key: fs.readFileSync("./ssl/www_myspaceti.me.key"),
+//   cert: fs.readFileSync("./ssl/www_myspaceti.me_cert.crt"),
+//   ca: fs.readFileSync("./ssl/www_myspaceti.me_chain_cert.crt"),
+// };
 const http = Http.createServer(app);
-const https = Https.createServer(options, app);
+// const https = Https.createServer(options, app);
 const http_port = process.env.HTTP_PORT || 3000;
-const https_port = process.env.HTTPS_PORT || 443;
+// const https_port = process.env.HTTPS_PORT || 443;
 
 // SERVER LISTEN
 http.listen(http_port, () => {
   console.log(`Start listen Server: ${http_port}`);
 });
 
-https.listen(https_port, () => {
-  console.log(`Start listen Server: ${https_port}`);
-});
+// https.listen(https_port, () => {
+//   console.log(`Start listen Server: ${https_port}`);
+// });
 
 module.exports = app;
