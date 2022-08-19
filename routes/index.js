@@ -8,6 +8,7 @@ const router = express.Router();
 const authRouter = require("./auth.js");
 const postsRouter = require("./posts.js");
 const commentsRouter = require("./comments.js");
+
 router.use("/posts", [postsRouter]);
 router.use("/comments", [commentsRouter]);
 router.use("/", [authRouter]);

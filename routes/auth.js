@@ -4,26 +4,17 @@
 // 이 파일에서 사용할 라우터 객체 생성
 const express = require("express");
 const router = express.Router();
+const auth = require("../controller/auth");
 
-// 이 파일에서 사용할 post DB가 어떻게 생겼는지 불러옵니다. (schema/post.js)
-const USERS = require("../schemas/user.js");
-
-//  ---------------- 여기부터 API 시작 ----------------
-
-// ------------------
-// TASK 1 : 회원가입
-router.post("/signup", async (req, res) => {
-  res.json({ data: "post /api/signup" });
-});
-
-// ------------------
-// TASK 2 : 로그인
-router.post("/login", async (req, res) => {
-  res.json({ data: "POST /api/login" });
-});
+//TASK 1 : 메인화면
 router.get("/", async (req, res) => {
-  res.send("Hello world");
+  res.render("main");
 });
+// TASK 2 : 회원가입
+router.route("/signup").get(auth.registerPage).post(auth.register);
+// ------------------
+// TASK 3 : 로그인
+router.route("/login").get(auth.loginPage).post(auth.login);
 
 // 이 파일의 router 객체를 외부에 공개합니다.
 module.exports = router;
