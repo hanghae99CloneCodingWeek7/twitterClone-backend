@@ -80,7 +80,7 @@ exports.registerDirect = async (req, res) => {
     return res.send({
       statusCode: 400,
       errReason: message,
-      message: "입력하신 아이디와 패스워드를 확인해주세요.",
+      message: "입력하신 이메일과 패스워드를 확인해주세요.",
     });
   }
 };
@@ -91,13 +91,13 @@ exports.loginPage = async (req, res) => {
 };
 exports.login = async (req, res) => {
   const loginSchema = Joi.object({
-    USER_ID: Joi.string().min(6).max(12).alphanum().required(),
+    EMAIL: Joi.string().email().required(),
     PASSWORD: Joi.string().min(5).max(12).alphanum().required(),
   });
 
   try {
     // joi 객체의 스키마를 잘 통과했는지 확인
-    const { USER_ID, PASSWORD } = await loginSchema.validateAsync(req.body);
+    const { EMAIL, PASSWORD } = await loginSchema.validateAsync(req.body);
 
     if (req.cookies.token) {
       return res.send({
@@ -106,7 +106,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    const userOnDB = await USERS.findOne({ USER_ID });
+    const userOnDB = await USERS.findOne({ EMAIL });
     const isSuccess = bcrypt.compareSync(PASSWORD, userOnDB.PASSWORD); // True or False
 
     if (isSuccess) {
@@ -128,7 +128,7 @@ exports.login = async (req, res) => {
     return res.send({
       statusCode: 412,
       errReason: message,
-      message: "입력하신 아이디와 패스워드를 확인해주세요.",
+      message: "입력하신 이메일과 패스워드를 확인해주세요.",
     });
   }
 };

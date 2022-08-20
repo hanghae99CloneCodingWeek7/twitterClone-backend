@@ -14,7 +14,7 @@ module.exports = function (passport) {
         // console.log(refreshToken);
 
         const newUser = {
-          USER_ID: profile.emails[0].value,
+          // USER_ID: profile.emails[0].value,
           GOOGLE_ID: profile.id,
           DISPLAY_NAME: profile.displayName,
           FIRST_NAME: profile.name.givenName,
