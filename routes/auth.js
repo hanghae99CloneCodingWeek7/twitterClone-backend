@@ -16,10 +16,10 @@ router.route("/signup").get(auth.registerPage).post(auth.register);
 router.route("/google").get(auth.googleLogin);
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
+  passport.authenticate("google", { failureRedirect: "/api" }),
   (req, res) => {
     // Successful authentication, redirect home.
-    res.render("main");
+    res.redirect("/api");
   }
 );
 

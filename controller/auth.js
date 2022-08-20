@@ -11,14 +11,6 @@ const passport = require("passport");
 exports.googleLogin = passport.authenticate("google", {
   scope: ["profile", "email"],
 });
-(exports.googleLoginCallback = passport.authenticate("google", {
-  failureRedirect: "main",
-})),
-  (req, res) => {
-    res.render("main");
-  };
-
-// TASK 1 : 회원가입
 
 exports.registerPage = async (req, res) => {
   res.render("register");
