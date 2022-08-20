@@ -10,10 +10,6 @@ const CommentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  USER_ID: {
-    type: String,
-    required: true,
-  },
   CONTENT: {
     type: String,
     required: true,
