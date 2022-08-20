@@ -10,8 +10,16 @@ const USERS = require("../schemas/user");
 exports.registerPage = async (req, res) => {
   res.render("register");
 };
-
 exports.register = async (req, res) => {
+  // 로그인 상태가 아닐 때 진행
+  if (req.cookies.token) {
+    return res.send({
+      statusCode: 400,
+      message: "이미 로그인이 되어있습니다.",
+    });
+  }
+
+  // joi validation 객체
   const signupSchema = Joi.object({
     USER_ID: Joi.string().min(6).max(12).alphanum().required(),
     PASSWORD: Joi.string().min(5).max(12).alphanum().required(),
@@ -31,12 +39,6 @@ exports.register = async (req, res) => {
         message: "입력하신 두개의 비밀번호가 다릅니다.",
       });
     }
-    if (req.cookies.token) {
-      return res.send({
-        statusCode: 400,
-        message: "이미 로그인이 되어있습니다.",
-      });
-    }
     if (PASSWORD.includes(USER_ID)) {
       return res.send({
         statusCode: 400,
@@ -44,9 +46,26 @@ exports.register = async (req, res) => {
       });
     }
 
+    // USER_ID, Email 존재 확인
+    const isExistId = await USERS.findOne({ USER_ID });
+    console.log(isExistId, USER_ID);
+    const isExistEmail = await USERS.findOne({ EMAIL });
+    if (isExistId) {
+      return res.send({
+        statusCode: 400,
+        message: "이미 가입된 ID 입니다.",
+      });
+    }
+    if (isExistEmail) {
+      return res.send({
+        statusCode: 400,
+        message: "이미 가입된 이메일 입니다.",
+      });
+    }
+
     //
-    var PASSWORD_SALT = bcrypt.genSaltSync(10);
-    var hashedPassword = bcrypt.hashSync(PASSWORD, PASSWORD_SALT);
+    const PASSWORD_SALT = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(PASSWORD, PASSWORD_SALT);
 
     // signUp 서비스 진행해보고 결과 응답
     const createdUser = await USERS.create({
@@ -73,7 +92,6 @@ exports.register = async (req, res) => {
 exports.loginPage = async (req, res) => {
   res.send("This is login page");
 };
-
 exports.login = async (req, res) => {
   const loginSchema = Joi.object({
     USER_ID: Joi.string().min(6).max(12).alphanum().required(),
@@ -114,6 +132,29 @@ exports.login = async (req, res) => {
       statusCode: 400,
       errReason: message,
       message: "입력하신 아이디와 패스워드를 확인해주세요.",
+    });
+  }
+};
+
+// 임시 인증절차 middleware (모두 tester1로 통과)
+exports.authMiddleware = async (req, res, next) => {
+  try {
+    console.log("------ 🤔 Authorization Checking ------");
+
+    let user = await USERS.findOne({ USER_ID: "tester1" }); // 임시 통과
+
+    console.log("------ ✅  Authorization Checked ------");
+
+    // 다 통과하면 토큰을 복호화하여 user 정보를 다음 미들웨어가 사용할 수 있는 형태로 넘겨준다.
+    res.locals.user = user;
+    next();
+    return;
+
+    // 에러 생기면 에러메세지
+  } catch (e) {
+    return res.send({
+      statusCode: 400,
+      message: "로그인 후 사용하세요",
     });
   }
 };
