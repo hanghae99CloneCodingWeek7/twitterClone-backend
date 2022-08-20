@@ -1,12 +1,25 @@
 const MY_SECRET_KEY = process.env.MY_SECRET_KEY;
 const Joi = require("joi");
 const bcrypt = require("bcryptjs");
-
 // 이 파일에서 사용할 post DB가 어떻게 생겼는지 불러옵니다. (schema/post.js)
 const USERS = require("../schemas/user");
+const passport = require("passport");
 
 // ------------------
+
+// GOOGLE 로그인
+exports.googleLogin = passport.authenticate("google", {
+  scope: ["profile", "email"],
+});
+(exports.googleLoginCallback = passport.authenticate("google", {
+  failureRedirect: "main",
+})),
+  (req, res) => {
+    res.render("main");
+  };
+
 // TASK 1 : 회원가입
+
 exports.registerPage = async (req, res) => {
   res.render("register");
 };

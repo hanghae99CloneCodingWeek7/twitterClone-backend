@@ -8,12 +8,14 @@ const Http = require("http");
 const Https = require("https");
 const passport = require("passport");
 const session = require("express-session");
+const mongoose = require("mongoose");
+const MongoStore = require("connect-mongo")(session);
 
 // 환경변수 모듈 불러오기 (process.env. + 변수 설정) -> process.env. 객체 사용 가능
 require("dotenv").config();
 
-//passport config
-// require("./passport")(passport);
+// passport config
+require("./config/passport")(passport);
 
 // express 객체 선언, 각종 middleware 설치
 const app = express();
@@ -23,13 +25,13 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
-//Sessions
+// /sessions
 app.use(
   session({
-    secret: process.env.MY_SECRET_KEY, // 임시키
+    secret: process.env.MY_SECRET_KEY,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true },
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
 
