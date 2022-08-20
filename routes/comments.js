@@ -17,7 +17,9 @@ router.get("/:postId",comments.getAllComments)
 // TASK 2 : 댓글 작성 with POST ('/api/comments')
 router.post("/:postId", comments.getCreateComments)
 // TASK 3 : 댓글 수정 with POST ('/api/comments')
-router.post("/:postId", comments.getUpdateComments)
+router.put("/:postId", comments.getUpdateComments)
+// TASK 4 : 댓글 삭제 with POST ('/api/comments')
+router.delete("/:postId", comments.getDeleteComments)
 
 // 이 파일의 router 객체를 외부에 공개합니다.
 module.exports = router;

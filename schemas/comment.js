@@ -7,9 +7,10 @@ const CommentSchema = new mongoose.Schema({
     required: true, // 필수로 들어와야 합니다.
   },
   user_id: {
-    type: Number,
+    type: String,
     required: true,
   },
+
   CONTENT: {
     type: String,
     required: true,
