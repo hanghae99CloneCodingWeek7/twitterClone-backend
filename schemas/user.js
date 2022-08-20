@@ -7,6 +7,14 @@ const UserSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  FIRST_NAME: {
+    type: String,
+    require: true,
+  },
+  LAST_NAME: {
+    type: String,
+    require: true,
+  },
   PASSWORD: {
     type: String,
     required: true,
@@ -25,6 +33,20 @@ const UserSchema = new mongoose.Schema({
     type: Array,
     required: true,
     default: [],
+  },
+  REGISTER_FROM: {
+    type: String,
+    enum: ["google", "web"],
+    require: true,
+  },
+  GOOGLE_ID: {
+    type: String,
+  },
+  DISPLAY_NAME: {
+    type: String,
+  },
+  IMAGE: {
+    type: String,
   },
   TIMESTAMPS: {
     type: Date, // 이건 날짜 형태로 받을게요~!
