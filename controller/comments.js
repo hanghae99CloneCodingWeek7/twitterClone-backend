@@ -82,7 +82,8 @@ exports.getUpdateComments = async (req, res) => {
     };
 };
 
-exports.getDeleteComments = async (req, res) => {
-    try{
+// exports.getDeleteComments = async (req, res) => {
+//     try{
         
-    }
+//     }
+// }
