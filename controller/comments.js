@@ -36,10 +36,23 @@ exports.getAllComments = async (req, res) => {
 exports.getCreateComments = async (req, res) => {
     try {
         const { postId } = req.params;
-
-        const 
+        const {userId,password,content } =req.body;
+        
+        if(!content){
+            res.status(400).json({ mesaage :'댓글내용을입력해주세요!'})
+            return;
+        }
+        if(!postId || !userId || !password){
+            res.status(400).json({mesaage : '데이터형식이올바르지않습니다'});
+            return;
+        }
+        await COMMENTS.create({ post_id :postId ,userId ,password ,content });
+        res.status(201).json({ message :"댓글을 생성하였습니다"})
+        
     } catch (error) {
-
+        const message = `${req.method} ${req.originalUrl} : ${error.message}`;
+        console.log(message);
+        res.status(400).json({ message });
     }
 };
 
