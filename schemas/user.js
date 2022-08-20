@@ -2,21 +2,26 @@ const mongoose = require("mongoose"); // 몽구스를 사용하겠다는 선언
 
 // 몽구스로 post라는 객체는 이런 모양으로 받겠다고 선언
 const UserSchema = new mongoose.Schema({
-  USER_ID: {
-    type: String, // 이건 문자열로 써야 합니다.
-    required: true, // 필수로 들어와야 합니다.
+  EMAIL: {
+    type: String,
+    unique: true,
+  },
+  FIRST_NAME: {
+    type: String,
+    require: true,
+  },
+  LAST_NAME: {
+    type: String,
+    require: true,
   },
   PASSWORD: {
     type: String,
-    required: true,
   },
-  PASSWORD_SALT: {
+  PROFILE_PIC: {
     type: String,
     required: true,
-  },
-  EMAIL: {
-    type: String,
-    required: true,
+    default:
+      "https://t4.ftcdn.net/jpg/03/40/12/49/360_F_340124934_bz3pQTLrdFpH92ekknuaTHy8JuXgG7fi.jpg",
   },
   FOLLOWER: {
     type: Array,
@@ -27,6 +32,20 @@ const UserSchema = new mongoose.Schema({
     type: Array,
     required: true,
     default: [],
+  },
+  REGISTER_FROM: {
+    type: String,
+    enum: ["google", "web"],
+    require: true,
+  },
+  GOOGLE_ID: {
+    type: String,
+  },
+  DISPLAY_NAME: {
+    type: String,
+  },
+  IMAGE: {
+    type: String,
   },
   TIMESTAMPS: {
     type: Date, // 이건 날짜 형태로 받을게요~!
