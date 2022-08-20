@@ -12,7 +12,8 @@ router.get("/", async (req, res) => {
 });
 
 // TASK 2 : 회원가입
-router.route("/signup").get(auth.registerPage).post(auth.register);
+
+router.route("/signup").get(auth.registerPage).post(auth.registerDirect);
 router.route("/google").get(auth.googleLogin);
 router.get(
   "/google/callback",

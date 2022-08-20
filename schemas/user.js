@@ -2,7 +2,7 @@ const mongoose = require("mongoose"); // 몽구스를 사용하겠다는 선언
 
 // 몽구스로 post라는 객체는 이런 모양으로 받겠다고 선언
 const UserSchema = new mongoose.Schema({
-  USER_ID: {
+  EMAIL: {
     type: String,
     unique: true,
   },
@@ -17,10 +17,11 @@ const UserSchema = new mongoose.Schema({
   PASSWORD: {
     type: String,
   },
-  EMAIL: {
+  PROFILE_PIC: {
     type: String,
     required: true,
-    unique: true,
+    default:
+      "https://t4.ftcdn.net/jpg/03/40/12/49/360_F_340124934_bz3pQTLrdFpH92ekknuaTHy8JuXgG7fi.jpg",
   },
   FOLLOWER: {
     type: Array,
