@@ -5,14 +5,24 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../controller/auth");
-
+const passport = require("passport");
 //TASK 1 : 메인화면
 router.get("/", async (req, res) => {
   res.render("main");
 });
 
 // TASK 2 : 회원가입
+
 router.route("/signup").get(auth.registerPage).post(auth.registerDirect);
+router.route("/google").get(auth.googleLogin);
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/api" }),
+  (req, res) => {
+    // Successful authentication, redirect home.
+    res.redirect("/api");
+  }
+);
 
 // TASK 3 : 로그인
 router.route("/login").get(auth.loginPage).post(auth.login);
