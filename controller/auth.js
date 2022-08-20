@@ -10,7 +10,7 @@ const USERS = require("../schemas/user");
 exports.registerPage = async (req, res) => {
   res.render("register");
 };
-exports.register = async (req, res) => {
+exports.registerDirect = async (req, res) => {
   // 로그인 상태가 아닐 때 진행
   if (req.cookies.token) {
     return res.send({
@@ -25,12 +25,22 @@ exports.register = async (req, res) => {
     PASSWORD: Joi.string().min(5).max(12).alphanum().required(),
     CONFIRM: Joi.string().min(5).max(12).alphanum().required(),
     EMAIL: Joi.string().email().required(),
+    FIRST_NAME: Joi.string().max(20).alphanum().required(),
+    LAST_NAME: Joi.string().max(20).alphanum().required(),
+    PROFILE_PIC: Joi.string(),
   });
 
   try {
     // joi 객체의 스키마를 잘 통과했는지 확인
-    const { USER_ID, PASSWORD, CONFIRM, EMAIL } =
-      await signupSchema.validateAsync(req.body);
+    const {
+      USER_ID,
+      PASSWORD,
+      CONFIRM,
+      EMAIL,
+      FIRST_NAME,
+      LAST_NAME,
+      PROFILE_PIC,
+    } = await signupSchema.validateAsync(req.body);
 
     // 기타 확인
     if (PASSWORD !== CONFIRM) {
@@ -72,6 +82,11 @@ exports.register = async (req, res) => {
       USER_ID,
       PASSWORD: hashedPassword,
       EMAIL,
+      FIRST_NAME,
+      LAST_NAME,
+      PROFILE_PIC,
+      REGISTER_FROM: "web",
+      DISPLAY_NAME: FIRST_NAME + " " + LAST_NAME,
       TIMESTAMPS: new Date(),
     });
 

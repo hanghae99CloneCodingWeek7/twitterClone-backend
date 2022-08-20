@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
 });
 
 // TASK 2 : 회원가입
-router.route("/signup").get(auth.registerPage).post(auth.register);
+router.route("/signup").get(auth.registerPage).post(auth.registerDirect);
 
 // TASK 3 : 로그인
 router.route("/login").get(auth.loginPage).post(auth.login);
