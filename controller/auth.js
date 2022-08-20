@@ -138,7 +138,7 @@ exports.authMiddleware = async (req, res, next) => {
   try {
     console.log("------ 🤔 Authorization Checking ------");
 
-    let user = await USERS.findOne({ USER_ID: "tester1" }); // 임시 통과
+    let user = await USERS.findOne({ EMAIL: "test@test3.com" }); // 임시 통과
 
     console.log("------ ✅  Authorization Checked ------");
 
