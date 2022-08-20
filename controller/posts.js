@@ -6,43 +6,40 @@ const USERS = require("../schemas/user");
 // TASK 1 : 게시글 조회 with GET ('/api/posts')
 exports.getPostsAll = async (req, res) => {
   try {
+    // 로그인 유저가 팔로잉 하고 있는 모든 피드(포스트) 정보를 불러옴
     const { _id, FOLLOWING } = res.locals.user;
     const allPostsOnFeed = await POSTS.find({ user_id: [...FOLLOWING, _id] });
 
-    const allPostsOnFeedArr = allPostsOnFeed.map((post) => {
-      console.log(post);
+    // 노출할 모든 포스트의 정보(유저 정보 포함)를 비동기 리턴하는 함수 정의
+    allPostsOnFeedArr = async () => {
+      // Promise.all & map 함수를 활용
+      const allPostsOnFeedArr = await Promise.all(
+        // 각 post 정보 하나하나에서 각 작성자 user_id로 유저 정보를 불러옴
+        allPostsOnFeed.map(async (post) => {
+          const writer = await USERS.findOne({ _id: post.user_id });
 
-      return {
-        postInfo: {
-          _id: post._id,
-          CONTENT: post.CONTENT,
-          POST_PHOTO: post.POST_PHOTO,
-          TIMESTAMPS: post.TIMESTAMPS,
-        },
-        writerInfo: {
-          _id: "writer._id",
-          USER_ID: "writer.USER_ID",
-          PROFILE_PIC: "writer.PROFILE_PIC",
-        },
-      };
-      // return USERS.findOne({ _id: post.user_id }).then((writer) => {
-      //   return {
-      //     postInfo: {
-      //       _id: post._id,
-      //       CONTENT: post.CONTENT,
-      //       POST_PHOTO: post.POST_PHOTO,
-      //       TIMESTAMPS: post.TIMESTAMPS,
-      //     },
-      //     writerInfo: {
-      //       _id: writer._id,
-      //       USER_ID: writer.USER_ID,
-      //       PROFILE_PIC: writer.PROFILE_PIC,
-      //     },
-      //   };
-      // });
-    });
+          return {
+            postInfo: {
+              _id: post._id,
+              CONTENT: post.CONTENT,
+              POST_PHOTO: post.POST_PHOTO,
+              TIMESTAMPS: post.TIMESTAMPS,
+            },
+            writerInfo: {
+              _id: writer._id,
+              DISPLAY_NAME: writer.DISPLAY_NAME,
+              PROFILE_PIC: writer.PROFILE_PIC,
+            },
+          };
+        })
+      );
 
-    res.status(200).json({ statusCode: 200, allPostsOnFeedArr });
+      return allPostsOnFeedArr;
+    };
+
+    const returnArr = await allPostsOnFeedArr();
+
+    res.status(200).json({ statusCode: 200, returnArr });
     return;
   } catch (error) {
     const message = `${req.method} ${req.originalUrl} : ${error.message}`;
@@ -94,13 +91,13 @@ exports.updatePost = async (req, res) => {
 
     if (!postExist) {
       res.send({
-        statusCode: 400,
+        statusCode: 411,
         errReason: "게시글이 없습니다.",
       });
       return;
     } else if (!foundPost) {
       res.send({
-        statusCode: 400,
+        statusCode: 412,
         errReason: "권한이 없습니다.",
       });
       return;
@@ -144,13 +141,13 @@ exports.deletePost = async (req, res) => {
 
     if (!postExist) {
       res.send({
-        statusCode: 400,
+        statusCode: 411,
         errReason: "게시글이 없습니다.",
       });
       return;
     } else if (!foundPost) {
       res.send({
-        statusCode: 400,
+        statusCode: 412,
         errReason: "권한이 없습니다.",
       });
       return;

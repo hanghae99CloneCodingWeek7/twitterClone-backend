@@ -31,12 +31,11 @@ exports.registerDirect = async (req, res) => {
     CONFIRM: Joi.string().min(5).max(12).alphanum().required(),
     FIRST_NAME: Joi.string().max(20).alphanum().required(),
     LAST_NAME: Joi.string().max(20).alphanum().required(),
-    PROFILE_PIC: Joi.string(),
   });
 
   try {
     // joi 객체의 스키마를 잘 통과했는지 확인
-    const { EMAIL, PASSWORD, CONFIRM, FIRST_NAME, LAST_NAME, PROFILE_PIC } =
+    const { EMAIL, PASSWORD, CONFIRM, FIRST_NAME, LAST_NAME } =
       await signupSchema.validateAsync(req.body);
 
     // 기타 확인
@@ -66,7 +65,6 @@ exports.registerDirect = async (req, res) => {
       EMAIL,
       FIRST_NAME,
       LAST_NAME,
-      PROFILE_PIC,
       REGISTER_FROM: "web",
       DISPLAY_NAME: FIRST_NAME + " " + LAST_NAME,
       TIMESTAMPS: new Date(),
@@ -80,7 +78,7 @@ exports.registerDirect = async (req, res) => {
     return res.send({
       statusCode: 400,
       errReason: message,
-      message: "입력하신 아이디와 패스워드를 확인해주세요.",
+      message: "입력하신 이메일과 패스워드를 확인해주세요.",
     });
   }
 };
@@ -91,13 +89,13 @@ exports.loginPage = async (req, res) => {
 };
 exports.login = async (req, res) => {
   const loginSchema = Joi.object({
-    USER_ID: Joi.string().min(6).max(12).alphanum().required(),
+    EMAIL: Joi.string().email().required(),
     PASSWORD: Joi.string().min(5).max(12).alphanum().required(),
   });
 
   try {
     // joi 객체의 스키마를 잘 통과했는지 확인
-    const { USER_ID, PASSWORD } = await loginSchema.validateAsync(req.body);
+    const { EMAIL, PASSWORD } = await loginSchema.validateAsync(req.body);
 
     if (req.cookies.token) {
       return res.send({
@@ -106,7 +104,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    const userOnDB = await USERS.findOne({ USER_ID });
+    const userOnDB = await USERS.findOne({ EMAIL });
     const isSuccess = bcrypt.compareSync(PASSWORD, userOnDB.PASSWORD); // True or False
 
     if (isSuccess) {
@@ -128,7 +126,7 @@ exports.login = async (req, res) => {
     return res.send({
       statusCode: 412,
       errReason: message,
-      message: "입력하신 아이디와 패스워드를 확인해주세요.",
+      message: "입력하신 이메일과 패스워드를 확인해주세요.",
     });
   }
 };
@@ -138,7 +136,7 @@ exports.authMiddleware = async (req, res, next) => {
   try {
     console.log("------ 🤔 Authorization Checking ------");
 
-    let user = await USERS.findOne({ USER_ID: "tester1" }); // 임시 통과
+    let user = await USERS.findOne({ EMAIL: "test@test3.com" }); // 임시 통과
 
     console.log("------ ✅  Authorization Checked ------");
 

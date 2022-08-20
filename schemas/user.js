@@ -8,11 +8,11 @@ const UserSchema = new mongoose.Schema({
   },
   FIRST_NAME: {
     type: String,
-    require: true,
+    required: true,
   },
   LAST_NAME: {
     type: String,
-    require: true,
+    required: true,
   },
   PASSWORD: {
     type: String,
@@ -36,13 +36,14 @@ const UserSchema = new mongoose.Schema({
   REGISTER_FROM: {
     type: String,
     enum: ["google", "web"],
-    require: true,
+    required: true,
   },
   GOOGLE_ID: {
     type: String,
   },
   DISPLAY_NAME: {
     type: String,
+    required: true,
   },
   IMAGE: {
     type: String,
