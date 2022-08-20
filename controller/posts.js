@@ -91,13 +91,13 @@ exports.updatePost = async (req, res) => {
 
     if (!postExist) {
       res.send({
-        statusCode: 400,
+        statusCode: 411,
         errReason: "게시글이 없습니다.",
       });
       return;
     } else if (!foundPost) {
       res.send({
-        statusCode: 400,
+        statusCode: 412,
         errReason: "권한이 없습니다.",
       });
       return;
@@ -141,13 +141,13 @@ exports.deletePost = async (req, res) => {
 
     if (!postExist) {
       res.send({
-        statusCode: 400,
+        statusCode: 411,
         errReason: "게시글이 없습니다.",
       });
       return;
     } else if (!foundPost) {
       res.send({
-        statusCode: 400,
+        statusCode: 412,
         errReason: "권한이 없습니다.",
       });
       return;

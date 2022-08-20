@@ -31,12 +31,11 @@ exports.registerDirect = async (req, res) => {
     CONFIRM: Joi.string().min(5).max(12).alphanum().required(),
     FIRST_NAME: Joi.string().max(20).alphanum().required(),
     LAST_NAME: Joi.string().max(20).alphanum().required(),
-    PROFILE_PIC: Joi.string(),
   });
 
   try {
     // joi 객체의 스키마를 잘 통과했는지 확인
-    const { EMAIL, PASSWORD, CONFIRM, FIRST_NAME, LAST_NAME, PROFILE_PIC } =
+    const { EMAIL, PASSWORD, CONFIRM, FIRST_NAME, LAST_NAME } =
       await signupSchema.validateAsync(req.body);
 
     // 기타 확인
@@ -66,7 +65,6 @@ exports.registerDirect = async (req, res) => {
       EMAIL,
       FIRST_NAME,
       LAST_NAME,
-      PROFILE_PIC,
       REGISTER_FROM: "web",
       DISPLAY_NAME: FIRST_NAME + " " + LAST_NAME,
       TIMESTAMPS: new Date(),
