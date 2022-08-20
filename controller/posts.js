@@ -171,3 +171,54 @@ exports.deletePost = async (req, res) => {
     });
   }
 };
+
+// ------------------
+// TASK 5 : 게시글 검색 with GET ('/api/posts/search?key=넷플릭스')
+exports.searchPosts = async (req, res) => {
+  try {
+    // 로그인 유저가 팔로잉 하고 있는 모든 피드(포스트) 정보를 불러옴
+    const { key: keyword } = req.query;
+
+    const allPostsToShow = await POSTS.find({ user_id: [...FOLLOWING, _id] });
+    // <----- (미완성 상태 )검색결과의 posts를 여기(allPostsToShow)에 주면, 아래에서 user 정보와 함께 return
+
+    // 노출할 모든 포스트의 정보(유저 정보 포함)를 비동기 리턴하는 함수 정의
+    allPostsOnFeedArr = async () => {
+      // Promise.all & map 함수를 활용
+      const allPostsOnFeedArr = await Promise.all(
+        // 각 post 정보 하나하나에서 각 작성자 user_id로 유저 정보를 불러옴
+        allPostsToShow.map(async (post) => {
+          const writer = await USERS.findOne({ _id: post.user_id });
+
+          return {
+            postInfo: {
+              _id: post._id,
+              CONTENT: post.CONTENT,
+              POST_PHOTO: post.POST_PHOTO,
+              TIMESTAMPS: post.TIMESTAMPS,
+            },
+            writerInfo: {
+              _id: writer._id,
+              DISPLAY_NAME: writer.DISPLAY_NAME,
+              PROFILE_PIC: writer.PROFILE_PIC,
+            },
+          };
+        })
+      );
+
+      return allPostsOnFeedArr;
+    };
+
+    const returnArr = await allPostsOnFeedArr();
+
+    res.status(200).json({ statusCode: 200, returnArr });
+    return;
+  } catch (error) {
+    const message = `${req.method} ${req.originalUrl} : ${error.message}`;
+    console.log(message);
+    return res.send({
+      statusCode: 400,
+      errReason: message,
+    });
+  }
+};

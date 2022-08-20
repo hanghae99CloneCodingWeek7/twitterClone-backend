@@ -20,7 +20,7 @@ module.exports = function (passport) {
           FIRST_NAME: profile.name.givenName,
           LAST_NAME: profile.name.familyName,
           EMAIL: profile.emails[0].value,
-          IMAGE: profile.photos[0].value,
+          PROFILE_PIC: profile.photos[0].value,
           REGISTER_FROM: "google",
         };
         try {
@@ -42,6 +42,7 @@ module.exports = function (passport) {
   passport.serializeUser((user, done) => {
     done(null, user.id);
   });
+
   passport.deserializeUser((id, done) => {
     User.findById(id, (err, user) => done(err, user));
   });
