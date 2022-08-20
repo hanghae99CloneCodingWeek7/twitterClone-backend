@@ -45,9 +45,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  IMAGE: {
-    type: String,
-  },
   TIMESTAMPS: {
     type: Date, // 이건 날짜 형태로 받을게요~!
     default: Date.now,

@@ -18,6 +18,8 @@ router.post("/", auth.authMiddleware, posts.createPost);
 router.put("/", auth.authMiddleware, posts.updatePost);
 // TASK 4 : 게시글 삭제 with DELETE ('/api/posts')
 router.delete("/", auth.authMiddleware, posts.deletePost);
+// TASK 5 : 게시글 검색
+router.delete("/search", auth.authMiddleware, posts.searchPosts);
 
 // 이 파일의 router 객체를 외부에 공개합니다.
 module.exports = router;
