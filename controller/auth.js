@@ -14,17 +14,16 @@ exports.registerDirect = async (req, res) => {
   // 로그인 상태가 아닐 때 진행
   if (req.cookies.token) {
     return res.send({
-      statusCode: 400,
+      statusCode: 411,
       message: "이미 로그인이 되어있습니다.",
     });
   }
 
   // joi validation 객체
   const signupSchema = Joi.object({
-    USER_ID: Joi.string().min(6).max(12).alphanum().required(),
+    EMAIL: Joi.string().email().required(),
     PASSWORD: Joi.string().min(5).max(12).alphanum().required(),
     CONFIRM: Joi.string().min(5).max(12).alphanum().required(),
-    EMAIL: Joi.string().email().required(),
     FIRST_NAME: Joi.string().max(20).alphanum().required(),
     LAST_NAME: Joi.string().max(20).alphanum().required(),
     PROFILE_PIC: Joi.string(),
@@ -32,43 +31,22 @@ exports.registerDirect = async (req, res) => {
 
   try {
     // joi 객체의 스키마를 잘 통과했는지 확인
-    const {
-      USER_ID,
-      PASSWORD,
-      CONFIRM,
-      EMAIL,
-      FIRST_NAME,
-      LAST_NAME,
-      PROFILE_PIC,
-    } = await signupSchema.validateAsync(req.body);
+    const { EMAIL, PASSWORD, CONFIRM, FIRST_NAME, LAST_NAME, PROFILE_PIC } =
+      await signupSchema.validateAsync(req.body);
 
     // 기타 확인
     if (PASSWORD !== CONFIRM) {
       return res.send({
-        statusCode: 400,
+        statusCode: 412,
         message: "입력하신 두개의 비밀번호가 다릅니다.",
       });
     }
-    if (PASSWORD.includes(USER_ID)) {
-      return res.send({
-        statusCode: 400,
-        message: "비밀번호는 ID를 포함할 수 없습니다.",
-      });
-    }
 
-    // USER_ID, Email 존재 확인
-    const isExistId = await USERS.findOne({ USER_ID });
-    console.log(isExistId, USER_ID);
+    // Email 존재 확인
     const isExistEmail = await USERS.findOne({ EMAIL });
-    if (isExistId) {
-      return res.send({
-        statusCode: 400,
-        message: "이미 가입된 ID 입니다.",
-      });
-    }
     if (isExistEmail) {
       return res.send({
-        statusCode: 400,
+        statusCode: 413,
         message: "이미 가입된 이메일 입니다.",
       });
     }
@@ -79,7 +57,6 @@ exports.registerDirect = async (req, res) => {
 
     // signUp 서비스 진행해보고 결과 응답
     const createdUser = await USERS.create({
-      USER_ID,
       PASSWORD: hashedPassword,
       EMAIL,
       FIRST_NAME,
@@ -119,7 +96,7 @@ exports.login = async (req, res) => {
 
     if (req.cookies.token) {
       return res.send({
-        statusCode: 400,
+        statusCode: 411,
         message: "이미 로그인이 되어있습니다.",
       });
     }
@@ -138,13 +115,13 @@ exports.login = async (req, res) => {
         .send({
           statusCode: 200,
           token: "로그인 성공",
-          message: "로그인에 성공했습니다.",
+          message: "로그인에 성공하였습니다.",
         });
     }
   } catch (error) {
     const message = `${req.method} ${req.originalUrl} : ${error.message}`;
     return res.send({
-      statusCode: 400,
+      statusCode: 412,
       errReason: message,
       message: "입력하신 아이디와 패스워드를 확인해주세요.",
     });
