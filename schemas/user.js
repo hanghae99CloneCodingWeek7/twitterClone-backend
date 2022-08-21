@@ -4,6 +4,7 @@ const mongoose = require("mongoose"); // 몽구스를 사용하겠다는 선언
 const UserSchema = new mongoose.Schema({
   EMAIL: {
     type: String,
+    required: true,
     unique: true,
   },
   FIRST_NAME: {
