@@ -1,8 +1,8 @@
 // express 모듈을 불러오고, 보안(CORS),포트 등 환경 초기화
+const path = require("path");
 const express = require("express");
 
 const cors = require("cors");
-const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
@@ -11,6 +11,7 @@ const Https = require("https");
 
 const passport = require("passport");
 const session = require("express-session");
+const exphbs = require("express-handlebars");
 
 const connectDB = require("./schemas");
 const mongoose = require("mongoose");
@@ -25,7 +26,13 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.set("view engine", "ejs"); // view engine으로 ejs 사용
+
+// Handlebars
+app.engine(".hbs", exphbs.engine({ defaultLayout: "main", extname: ".hbs" }));
+app.set("view engine", ".hbs");
+
+// Static folder
+app.use(express.static(path.join(__dirname, "public")));
 
 // sessions
 app.use(
