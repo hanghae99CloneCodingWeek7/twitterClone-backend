@@ -89,8 +89,10 @@ exports.createPost = async (req, res) => {
       TIMESTAMPS: new Date(),
     });
 
-    res.status(201).json({ statusCode: 201, createdPost_id: createdPost._id });
-    res.redirect("/api");
+    res
+      .status(201)
+      // .json({ statusCode: 201, createdPost_id: createdPost._id })
+      .redirect("/api");
   } catch (error) {
     const message = `${req.method} ${req.originalUrl} : ${error.message}`;
     console.log(message);

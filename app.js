@@ -11,6 +11,7 @@ const Https = require("https");
 
 const passport = require("passport");
 const session = require("express-session");
+const exphbs = require("express-handlebars");
 
 const connectDB = require("./schemas");
 const mongoose = require("mongoose");

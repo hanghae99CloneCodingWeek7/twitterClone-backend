@@ -140,7 +140,8 @@ exports.userFollowedBy = async (req, res) => {
 // TASK 5 : 로그인된 유저가 _id 유저를 팔로우
 exports.followAction = async (req, res) => {
   try {
-    const user = res.locals.user;
+    // const user = req.user;
+    const user = await USERS.findOne({ _id: "630055fce3c4e17206ebec77" });
     const { _id } = req.params;
 
     // 유저가 현재 팔로우하는 사람에 한명 추가
