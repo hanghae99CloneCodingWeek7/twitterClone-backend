@@ -97,52 +97,52 @@ exports.registerDirect = async (req, res) => {
 };
 
 //TASK 2: 로그인
-exports.loginPage = async (req, res) => {
-  res.send("This is login page");
-};
-exports.login = async (req, res) => {
-  const loginSchema = Joi.object({
-    EMAIL: Joi.string().email().required(),
-    PASSWORD: Joi.string().min(5).max(12).alphanum().required(),
-  });
+// exports.loginPage = async (req, res) => {
+//   res.send("This is login page");
+// };
+// exports.login = async (req, res) => {
+//   const loginSchema = Joi.object({
+//     EMAIL: Joi.string().email().required(),
+//     PASSWORD: Joi.string().min(5).max(12).alphanum().required(),
+//   });
 
-  try {
-    // joi 객체의 스키마를 잘 통과했는지 확인
-    const { EMAIL, PASSWORD } = await loginSchema.validateAsync(req.body);
+//   try {
+//     // joi 객체의 스키마를 잘 통과했는지 확인
+//     const { EMAIL, PASSWORD } = await loginSchema.validateAsync(req.body);
 
-    if (req.cookies.token) {
-      return res.send({
-        statusCode: 411,
-        message: "이미 로그인이 되어있습니다.",
-      });
-    }
+//     if (req.cookies.token) {
+//       return res.send({
+//         statusCode: 411,
+//         message: "이미 로그인이 되어있습니다.",
+//       });
+//     }
 
-    const userOnDB = await USERS.findOne({ EMAIL });
-    const isSuccess = bcrypt.compareSync(PASSWORD, userOnDB.PASSWORD); // True or False
+//     const userOnDB = await USERS.findOne({ EMAIL });
+//     const isSuccess = bcrypt.compareSync(PASSWORD, userOnDB.PASSWORD); // True or False
 
-    if (isSuccess) {
-      return res
-        .cookie("token", "로그인 성공", {
-          sameSite: "Strict",
-          maxAge: 30000, // 30sec
-          httpOnly: true,
-        })
-        .status(200)
-        .send({
-          statusCode: 200,
-          token: "로그인 성공",
-          message: "로그인에 성공하였습니다.",
-        });
-    }
-  } catch (error) {
-    const message = `${req.method} ${req.originalUrl} : ${error.message}`;
-    return res.send({
-      statusCode: 412,
-      errReason: message,
-      message: "입력하신 이메일과 패스워드를 확인해주세요.",
-    });
-  }
-};
+//     if (isSuccess) {
+//       return res
+//         .cookie("token", "로그인 성공", {
+//           sameSite: "Strict",
+//           maxAge: 30000, // 30sec
+//           httpOnly: true,
+//         })
+//         .status(200)
+//         .send({
+//           statusCode: 200,
+//           token: "로그인 성공",
+//           message: "로그인에 성공하였습니다.",
+//         });
+//     }
+//   } catch (error) {
+//     const message = `${req.method} ${req.originalUrl} : ${error.message}`;
+//     return res.send({
+//       statusCode: 412,
+//       errReason: message,
+//       message: "입력하신 이메일과 패스워드를 확인해주세요.",
+//     });
+//   }
+// };
 
 // 임시 인증절차 middleware (모두 tester1로 통과)
 exports.authMiddleware = async (req, res, next) => {
