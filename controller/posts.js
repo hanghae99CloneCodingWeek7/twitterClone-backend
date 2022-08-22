@@ -8,9 +8,10 @@ exports.getPostsAll = async (req, res) => {
   try {
     // 로그인 유저가 팔로잉 하고 있는 모든 피드(포스트) 정보를 불러옴
     const { _id, FOLLOWING } = req.user;
-    const allPostsOnFeed = await POSTS.find({
-      USER_ID: [...FOLLOWING, _id],
-    }).lean();
+    // const allPostsOnFeed = await POSTS.find({
+    //   USER_ID: [...FOLLOWING, _id],
+    // }).lean();
+    const allPostsOnFeed = require("../dataInitializer/postMockData.json");
 
     const { CONTENT } = req.query;
     const queryObject = {};
@@ -49,7 +50,15 @@ exports.getPostsAll = async (req, res) => {
 
     const returnArr = await allPostsOnFeedArr();
 
-    // res.status(200).json({ statusCode: 200, returnArr });
+    // res.status(200).json({
+    //   statusCode: 200,
+    //   data: {
+    //     display_name: req.user.DISPLAY_NAME,
+    //     image: req.user.PROFILE_PIC,
+    //     post: returnArr,
+    //     result,
+    //   },
+    // });
 
     res.render("post", {
       display_name: req.user.DISPLAY_NAME,

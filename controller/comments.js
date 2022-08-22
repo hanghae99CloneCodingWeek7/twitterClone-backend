@@ -14,7 +14,8 @@ exports.getAllComments = async (req, res) => {
     let result = [];
     for (const comment of comments) {
       result.push({
-        POST_ID: comment.POST_ID,
+        COMMENT_ID: comment._id,
+        USER_ID: comment.USER_ID,
         CONTENT: comment.CONTENT,
         TIMESTAMPS: comment.TIMESTAMPS,
       });
@@ -23,7 +24,7 @@ exports.getAllComments = async (req, res) => {
   } catch (error) {
     const message = `${req.method} ${req.originalUrl} : ${error.message}`;
     console.log(message);
-    res.status(400).json({ message });
+    res.status(400).json({ statusCode: 400, errReason: message });
   }
 };
 
