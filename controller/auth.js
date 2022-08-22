@@ -15,6 +15,9 @@ exports.googleLogin = passport.authenticate("google", {
 exports.mainPage = async (req, res) => {
   res.render("main");
 };
+exports.registerPage = async (req, res) => {
+  res.render("signup");
+};
 
 exports.registerDirect = async (req, res) => {
   // 로그인 상태가 아닐 때 진행
@@ -78,9 +81,11 @@ exports.registerDirect = async (req, res) => {
       TIMESTAMPS: new Date(),
     });
 
-    return res
-      .status(201)
-      .send({ statusCode: 201, createdUser_id: createdUser._id });
+    return res.status(201).send({
+      statusCode: 201,
+      createdUser_id: createdUser._id,
+      msg: "회원가입이 되었습니다.",
+    });
   } catch (error) {
     const message = `${req.method} ${req.originalUrl} : ${error.message}`;
     return res.send({
