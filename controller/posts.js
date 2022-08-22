@@ -69,8 +69,8 @@ exports.getPostsAll = async (req, res) => {
 
     return;
   } catch (error) {
-    const message = `${req.method} ${req.originalUrl} : ${error.message}`;
-    console.log(message);
+    // const message = `${req.method} ${req.originalUrl} : ${error.message}`;
+
     return res.send({
       statusCode: 400,
       errReason: message,

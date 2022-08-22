@@ -50,13 +50,19 @@ module.exports = function (passport) {
         // pass in request from route to check if a user is logged in
         passReqToCallback: true,
       },
-      async (email, password, done) => {
-        const userOnDB = await User.findOne({ EMAIL: email });
-        const isSuccess = bcrypt.compareSync(password, userOnDB.PASSWORD); // True or False
-        if (isSuccess) {
-          done(null, userOnDB);
-        } else {
-          return done(null, false);
+
+      async (req, email, password, done) => {
+        try {
+          const userOnDB = await User.findOne({ EMAIL: email });
+          // console.log(userOnDB);
+          const isSuccess = bcrypt.compareSync(password, userOnDB.PASSWORD); // True or False
+          if (isSuccess) {
+            done(null, userOnDB);
+          } else {
+            return done(null, false);
+          }
+        } catch (error) {
+          console.log(error);
         }
       }
     )

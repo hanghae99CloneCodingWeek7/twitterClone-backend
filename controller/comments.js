@@ -29,6 +29,7 @@ exports.getAllComments = async (req, res) => {
 };
 
 exports.createCommentsPage = async (req, res) => {
+  // console.log(req.user);
   console.log("A");
   res.render("writeComments");
 };
