@@ -26,12 +26,19 @@ exports.registerDirect = async (req, res) => {
   }
 
   // joi validation 객체
+  const hangulAcceptRegX = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9]+$/;
   const signupSchema = Joi.object({
     EMAIL: Joi.string().email().required(),
     PASSWORD: Joi.string().min(5).max(12).alphanum().required(),
     CONFIRM: Joi.string().min(5).max(12).alphanum().required(),
-    FIRST_NAME: Joi.string().max(20).alphanum().required(),
-    LAST_NAME: Joi.string().max(20).alphanum().required(),
+    FIRST_NAME: Joi.string()
+      .max(20)
+      .pattern(new RegExp(hangulAcceptRegX))
+      .required(),
+    LAST_NAME: Joi.string()
+      .max(20)
+      .pattern(new RegExp(hangulAcceptRegX))
+      .required(),
   });
 
   try {
