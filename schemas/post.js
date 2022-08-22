@@ -2,7 +2,11 @@ const mongoose = require("mongoose"); // 몽구스를 사용하겠다는 선언
 
 // 몽구스로 post라는 객체는 이런 모양으로 받겠다고 선언
 const PostSchema = new mongoose.Schema({
-  user_id: {
+  USER_ID: {
+    type: String,
+    required: true,
+  },
+  USER_EMAIL: {
     type: String,
     required: true,
   },
@@ -12,10 +16,11 @@ const PostSchema = new mongoose.Schema({
   },
   POST_PHOTO: {
     type: String,
-    required: true,
+    // required: true,
   },
   TIMESTAMPS: {
-    type: Date, // 이건 날짜 형태로 받을게요~!
+    type: Date,
+    default: Date.now,
     required: true,
   },
 });

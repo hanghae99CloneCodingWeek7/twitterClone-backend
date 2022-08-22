@@ -13,7 +13,6 @@ exports.getProfile = async (req, res) => {
       FOLLOWING,
       REGISTER_FROM,
       DISPLAY_NAME,
-      IMAGE,
       TIMESTAMPS,
     } = res.locals.user;
     // 내 프로필 정보 뿌려주기
@@ -27,7 +26,6 @@ exports.getProfile = async (req, res) => {
       FOLLOWING, // 내가 팔로잉하는 유저의 _id 리스트
       REGISTER_FROM, // 어떤 경로로 가입했는지
       DISPLAY_NAME, // 닉네임으로 사용할 이름 (기본값 First+Last name)
-      IMAGE, // 구글이미지(구글 프로필이 있으면 이걸 사용)
       TIMESTAMPS, // 가입일 또는 수정일
     };
 
@@ -41,7 +39,6 @@ exports.getProfile = async (req, res) => {
       errReason: message,
     });
   }
-  res.send("GET /api/profiles/");
 };
 // TASK 2 : 내 프로필 수정
 exports.updateProfile = async (req, res) => {
@@ -143,7 +140,8 @@ exports.userFollowedBy = async (req, res) => {
 // TASK 5 : 로그인된 유저가 _id 유저를 팔로우
 exports.followAction = async (req, res) => {
   try {
-    const user = res.locals.user;
+    // const user = req.user;
+    const user = await USERS.findOne({ _id: "630055fce3c4e17206ebec77" });
     const { _id } = req.params;
 
     // 유저가 현재 팔로우하는 사람에 한명 추가
@@ -231,7 +229,7 @@ exports.getOthersProfile = async (req, res) => {
     const { _id } = req.params;
 
     const {
-      _id: user_id,
+      _id: USER_ID,
       FIRST_NAME,
       LAST_NAME,
       PROFILE_PIC,
@@ -245,7 +243,7 @@ exports.getOthersProfile = async (req, res) => {
     // 프로필 정보 뿌려주기
 
     const profileInfo = {
-      user_id, // user의 고유번호
+      USER_ID, // user의 고유번호
       FIRST_NAME, // 이름
       LAST_NAME, // 성
       PROFILE_PIC, // 프로필사진 (기본값 있음)
@@ -282,5 +280,4 @@ exports.searchProfiles = async (req, res) => {
       errReason: message,
     });
   }
-  res.send("GET /api/profiles/search?key=넷플릭스");
 };
