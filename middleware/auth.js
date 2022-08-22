@@ -1,6 +1,8 @@
 module.exports = {
   ensureAuth: function (req, res, next) {
+    console.log("------ 🤔 Authorization Checking ------");
     if (req.isAuthenticated()) {
+      console.log("------ ✅  Authorization Checked ------");
       return next();
     } else {
       res.redirect("/api");

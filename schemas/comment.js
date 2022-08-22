@@ -2,11 +2,11 @@ const mongoose = require("mongoose"); // 몽구스를 사용하겠다는 선언
 
 // 몽구스로 post라는 객체는 이런 모양으로 받겠다고 선언
 const CommentSchema = new mongoose.Schema({
-  post_id: {
+  POST_ID: {
     type: String,
     required: true, // 필수로 들어와야 합니다.
   },
-  user_id: {
+  USER_ID: {
     type: String,
     required: true,
   },

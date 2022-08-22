@@ -9,8 +9,11 @@ const cookieParser = require("cookie-parser");
 const Http = require("http");
 const Https = require("https");
 
+// 세션(로그인)
 const passport = require("passport");
 const session = require("express-session");
+
+// view용 모듈 express-handlebars
 const exphbs = require("express-handlebars");
 
 const connectDB = require("./schemas");
@@ -54,6 +57,7 @@ app.use(
     origin: [
       "http://www.myspaceti.me",
       "https://www.myspaceti.me",
+      "http://localhost:3000",
       "http://localhost:8002",
       "https://localhost",
       "http://nodeapi.myspaceti.me:8002",
@@ -69,9 +73,9 @@ app.use("/api", [indexRouter]);
 // HTTP / HTTPS 연결 관련
 const fs = require("fs");
 const options = {
-  key: fs.readFileSync("./ssl/www_myspaceti.me.key"),
-  cert: fs.readFileSync("./ssl/www_myspaceti.me_cert.crt"),
-  ca: fs.readFileSync("./ssl/www_myspaceti.me_chain_cert.crt"),
+  key: fs.readFileSync(process.env.SSL_KEY_PATH),
+  cert: fs.readFileSync(process.env.SSL_CERT_PATH),
+  ca: fs.readFileSync(process.env.SSL_CA_PATH),
 };
 const http = Http.createServer(app);
 const https = Https.createServer(options, app);

@@ -10,7 +10,7 @@ const { ensureAuth } = require("../middleware/auth");
 
 router.use("/posts", ensureAuth, [postsRouter]);
 router.use("/comments", ensureAuth, [commentsRouter]);
-router.use("/profiles", [profilesRouter]);
+router.use("/profiles", ensureAuth, [profilesRouter]);
 router.use("/", [authRouter]);
 
 // 이 파일에서 만든 router 객체를 외부에 공개 -> app.js에서 사용할 수 있도록
