@@ -11,7 +11,7 @@ exports.getPostsAll = async (req, res) => {
     // const allPostsOnFeed = await POSTS.find({
     //   USER_ID: [...FOLLOWING, _id],
     // }).lean();
-    const allPostsOnFeed = require("../dataInitializer/postMockData.json");
+    // const allPostsOnFeed = require("../dataInitializer/postMockData.json");
 
     const { CONTENT } = req.query;
     const queryObject = {};
@@ -21,34 +21,34 @@ exports.getPostsAll = async (req, res) => {
       result = await POSTS.find(queryObject).lean();
     }
 
-    // 노출할 모든 포스트의 정보(유저 정보 포함)를 비동기 리턴하는 함수 정의
-    allPostsOnFeedArr = async () => {
-      // Promise.all & map 함수를 활용
-      const allPostsOnFeedArr = await Promise.all(
-        // 각 post 정보 하나하나에서 각 작성자 user_id로 유저 정보를 불러옴
-        allPostsOnFeed.map(async (post) => {
-          const writer = await USERS.findOne({ _id: post.USER_ID });
+    // // 노출할 모든 포스트의 정보(유저 정보 포함)를 비동기 리턴하는 함수 정의
+    // allPostsOnFeedArr = async () => {
+    //   // Promise.all & map 함수를 활용
+    //   const allPostsOnFeedArr = await Promise.all(
+    //     // 각 post 정보 하나하나에서 각 작성자 user_id로 유저 정보를 불러옴
+    //     allPostsOnFeed.map(async (post) => {
+    //       const writer = await USERS.findOne({ _id: post.USER_ID });
 
-          return {
-            postInfo: {
-              _id: post._id,
-              CONTENT: post.CONTENT,
-              POST_PHOTO: post.POST_PHOTO,
-              TIMESTAMPS: post.TIMESTAMPS,
-            },
-            writerInfo: {
-              _id: writer._id,
-              DISPLAY_NAME: writer.DISPLAY_NAME,
-              PROFILE_PIC: writer.PROFILE_PIC,
-            },
-          };
-        })
-      );
+    //       return {
+    //         postInfo: {
+    //           _id: post._id,
+    //           CONTENT: post.CONTENT,
+    //           POST_PHOTO: post.POST_PHOTO,
+    //           TIMESTAMPS: post.TIMESTAMPS,
+    //         },
+    //         writerInfo: {
+    //           _id: writer._id,
+    //           DISPLAY_NAME: writer.DISPLAY_NAME,
+    //           PROFILE_PIC: writer.PROFILE_PIC,
+    //         },
+    //       };
+    //     })
+    //   );
 
-      return allPostsOnFeedArr;
-    };
+    //   return allPostsOnFeedArr;
+    // };
 
-    const returnArr = await allPostsOnFeedArr();
+    const returnArr = await POSTS.find({}).lean();
 
     // res.status(200).json({
     //   statusCode: 200,

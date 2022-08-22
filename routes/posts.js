@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const posts = require("../controller/posts");
+const Post = require("../schemas/post");
+const User = require("../schemas/user");
 // const auth = require("../controller/auth");
 
 // TASK 1 : 게시글 조회 with GET ('/api/posts')
