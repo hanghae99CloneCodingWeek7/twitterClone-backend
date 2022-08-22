@@ -58,33 +58,6 @@ module.exports = function (passport) {
         } else {
           return done(null, false);
         }
-
-        // console.log(await User.findOne({ email }));
-        // async for login to be done before db access
-        // process.nextTick(function () {
-        //   // find user by email
-        //   User.findOne({ "local.email": email }, function (err, user) {
-        //     if (err) {
-        //       return done(err);
-        //     }
-        //     // if no user is found send flash
-        //     if (!user)
-        //       return done(
-        //         null,
-        //         false,
-        //         req.flash("loginMessage", "No user found.")
-        //       );
-        //     // if invalid password send flash
-        //     if (!user.validPassword(password))
-        //       return done(
-        //         null,
-        //         false,
-        //         req.flash("loginMessage", "Oops! Wrong password.")
-        //       );
-        //     // else login successful
-        //     else return done(null, user);
-        //   });
-        // });
       }
     )
   );
