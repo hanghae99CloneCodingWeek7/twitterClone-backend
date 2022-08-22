@@ -5,13 +5,13 @@ module.exports = {
       console.log("------ ✅  Authorization Checked ------");
       return next();
     } else {
-      res.redirect("/api");
+      res.status(403).json({ message: "로그인 필요" });
     }
   },
 
   ensureGuest: function (req, res, next) {
     if (req.isAuthenticated()) {
-      res.redirect("/api/posts");
+      res.status(200);
     } else {
       return next();
     }

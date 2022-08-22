@@ -16,8 +16,8 @@ router.post(
   "/login",
   passport.authenticate("local-login", { failureRedirect: "/api" }),
   (req, res) => {
-    // Successful authentication, redirect home.
-    res.redirect("/api");
+    // Successful authentication, send status and json.
+    res.status(200).json({ message: "로그인 완료" });
   }
 );
 
@@ -26,7 +26,7 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/api" }),
   (req, res) => {
     // Successful authentication, redirect home.
-    res.redirect("/api");
+    res.status(200).json({ message: "로그인 완료" });
   }
 );
 
