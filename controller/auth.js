@@ -12,12 +12,12 @@ exports.googleLogin = passport.authenticate("google", {
   scope: ["profile", "email"],
 });
 
-exports.mainPage = async (req, res) => {
-  res.render("main");
-};
-exports.registerPage = async (req, res) => {
-  res.render("signup");
-};
+// exports.mainPage = async (req, res) => {
+//   res.render("main");
+// };
+// exports.registerPage = async (req, res) => {
+//   res.render("signup");
+// };
 
 exports.registerDirect = async (req, res) => {
   // 로그인 상태가 아닐 때 진행
