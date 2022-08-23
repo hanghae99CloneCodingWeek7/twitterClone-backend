@@ -2,6 +2,30 @@
 const POSTS = require("../schemas/post");
 const USERS = require("../schemas/user");
 
+const req = {
+  user: {
+    _id: "6302e14167f461a60d1605e9",
+    EMAIL: "abc@abc.com",
+    FIRST_NAME: "seungjun",
+    LAST_NAME: "lee",
+    PROFILE_PIC:
+      "https://t4.ftcdn.net/jpg/03/40/12/49/360_F_340124934_bz3pQTLrdFpH92ekknuaTHy8JuXgG7fi.jpg",
+    FOLLOWER: [
+      "630055fce3c4e17206ebec77",
+      "6300482f67dd88e22477039a",
+      "630056affde5db42c7dd4800",
+    ],
+    FOLLOWING: [
+      "630055fce3c4e17206ebec77",
+      "63004dfa1759949daf48394b",
+      "630056affde5db42c7dd4800",
+    ],
+    REGISTER_FROM: "web",
+    DISPLAY_NAME: "seungjun lee",
+    TIMESTAMPS: "2022-08-22T01:52:01.200+00:00",
+  },
+};
+
 // ------------------
 // TASK 1 : 게시글 조회 with GET ('/api/posts')
 exports.getPostsAll = async (req, res) => {
