@@ -31,11 +31,11 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Handlebars
-app.engine(".hbs", exphbs.engine({ defaultLayout: "main", extname: ".hbs" }));
-app.set("view engine", ".hbs");
+// app.engine(".hbs", exphbs.engine({ defaultLayout: "main", extname: ".hbs" }));
+// app.set("view engine", ".hbs");
 
-// Static folder
-app.use(express.static(path.join(__dirname, "public")));
+// // Static folder
+// app.use(express.static(path.join(__dirname, "public")));
 
 // sessions
 app.use(
@@ -44,6 +44,11 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    cookie: {
+      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    },
   })
 );
 
@@ -61,6 +66,7 @@ app.use(
       "http://localhost:8002",
       "https://localhost",
       "http://nodeapi.myspaceti.me:8002",
+      true,
     ],
     credentials: true,
   })
