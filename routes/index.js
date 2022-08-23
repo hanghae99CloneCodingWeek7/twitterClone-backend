@@ -6,7 +6,7 @@ const authRouter = require("./auth.js");
 const postsRouter = require("./posts.js");
 const commentsRouter = require("./comments.js");
 const profilesRouter = require("./profiles.js");
-const { ensureAuth } = require("../middleware/auth");
+const authMiddleware = require("../middleware/auth");
 
 router.use("/posts", [postsRouter]);
 router.use("/comments", [commentsRouter]);

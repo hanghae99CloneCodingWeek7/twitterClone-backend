@@ -1,4 +1,5 @@
 const MY_SECRET_KEY = process.env.MY_SECRET_KEY;
+const jwt = require("jsonwebtoken"); // jwt 토큰 사용
 const Joi = require("joi");
 const bcrypt = require("bcryptjs");
 // 이 파일에서 사용할 post DB가 어떻게 생겼는지 불러옵니다. (schema/post.js)
@@ -97,9 +98,53 @@ exports.registerDirect = async (req, res) => {
 };
 
 //TASK 2: 로그인
-// exports.loginPage = async (req, res) => {
-//   res.send("This is login page");
-// };
+exports.logIn = async (req, res) => {
+  const { EMAIL, PASSWORD } = req.body;
+  if (!EMAIL || !PASSWORD) {
+    return res.status(403).send({
+      message: "아이디 또는 비밀번호를 입력해주세요.",
+    });
+  }
+
+  try {
+    const userOnDB = await USERS.findOne({ EMAIL });
+    const isSuccess = bcrypt.compareSync(PASSWORD, userOnDB.PASSWORD); // True or False
+    if (isSuccess) {
+      const token = jwt.sign(
+        { email: userOnDB.EMAIL, display_name: userOnDB.DISPLAY_NAME },
+        process.env.TOKEN_KEY,
+        { expiresIn: "2h" } //2시간뒤 유효 기간 만료
+      );
+      return res.status(200).send({ token, message: "로그인 성공" });
+    } else {
+      return res
+        .status(403)
+        .send({ message: "아이디 또는 비밀번호가 틀렸습니다." });
+    }
+  } catch (error) {
+    return res.status(403).send({ message: "로그인 실패" });
+  }
+};
+
+//GOOGLE LOGIN
+exports.googleCallback = (req, res, next) => {
+  try {
+    passport.authenticate("google", { failureRedirect: "/" }, (error, user) => {
+      if (error) {
+        return next(error);
+      }
+      console.log(user);
+      const { EMAIL, DISPLAY_NAME } = user;
+      const token = jwt.sign({ EMAIL }, process.env.TOKEN_KEY, {
+        expiresIn: "24h",
+      });
+      res.status(200).send({ token, EMAIL, DISPLAY_NAME });
+    })(req, res, next);
+  } catch (error) {
+    res.status(400).send({ message: "구글 로그인 실패" });
+  }
+};
+
 // exports.login = async (req, res) => {
 //   const loginSchema = Joi.object({
 //     EMAIL: Joi.string().email().required(),
@@ -145,24 +190,24 @@ exports.registerDirect = async (req, res) => {
 // };
 
 // 임시 인증절차 middleware (모두 tester1로 통과)
-exports.authMiddleware = async (req, res, next) => {
-  try {
-    console.log("------ 🤔 Authorization Checking ------");
+// exports.authMiddleware = async (req, res, next) => {
+//   try {
+//     console.log("------ 🤔 Authorization Checking ------");
 
-    let user = await USERS.findOne({ EMAIL: "test@test3.com" }); // 임시 통과
+//     let user = await USERS.findOne({ EMAIL: "test@test3.com" }); // 임시 통과
 
-    console.log("------ ✅  Authorization Checked ------");
+//     console.log("------ ✅  Authorization Checked ------");
 
-    // 다 통과하면 토큰을 복호화하여 user 정보를 다음 미들웨어가 사용할 수 있는 형태로 넘겨준다.
-    res.locals.user = user;
-    next();
-    return;
+//     // 다 통과하면 토큰을 복호화하여 user 정보를 다음 미들웨어가 사용할 수 있는 형태로 넘겨준다.
+//     res.locals.user = user;
+//     next();
+//     return;
 
-    // 에러 생기면 에러메세지
-  } catch (e) {
-    return res.send({
-      statusCode: 400,
-      message: "로그인 후 사용하세요",
-    });
-  }
-};
+//     // 에러 생기면 에러메세지
+//   } catch (e) {
+//     return res.send({
+//       statusCode: 400,
+//       message: "로그인 후 사용하세요",
+//     });
+//   }
+// };
