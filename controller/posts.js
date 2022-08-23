@@ -33,15 +33,44 @@ exports.getPostsAll = async (req, res) => {
     const allPostsOnFeed = await POSTS.find({
       USER_ID: [...FOLLOWING, _id],
     });
-    // const allPostsOnFeed = require("../dataInitializer/postMockData.json");
 
+    // 노출할 모든 포스트의 정보(유저 정보 포함)를 비동기 리턴하는 함수 정의
+    allPostsOnFeedArr = async () => {
+      // Promise.all & map 함수를 활용
+      const allPostsOnFeedArr = await Promise.all(
+        // 각 post 정보 하나하나에서 각 작성자 USER_ID 유저 정보를 불러옴
+        allPostsOnFeed.map(async (post) => {
+          const writer = await USERS.findOne({ _id: post.USER_ID });
+
+          return {
+            postInfo: {
+              _id: post._id,
+              CONTENT: post.CONTENT,
+              POST_PHOTO: post.POST_PHOTO,
+              TIMESTAMPS: post.TIMESTAMPS,
+            },
+            writerInfo: {
+              _id: writer._id,
+              DISPLAY_NAME: writer.DISPLAY_NAME,
+              PROFILE_PIC: writer.PROFILE_PIC,
+            },
+          };
+        })
+      );
+
+      return allPostsOnFeedArr;
+    };
+
+    const returnArr = await allPostsOnFeedArr();
+
+    // const allPostsOnFeed = require("../dataInitializer/postMockData.json");
     // const search = req.query.search;
     // let result = await POSTS.find({}).lean();
 
     res.status(200).json({
       display_name: user.DISPLAY_NAME,
       image: user.PROFILE_PIC,
-      post: allPostsOnFeed,
+      postDetail: returnArr,
     });
 
     return;
