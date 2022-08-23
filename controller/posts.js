@@ -13,63 +13,19 @@ exports.getPostsAll = async (req, res) => {
     // }).lean();
     // const allPostsOnFeed = require("../dataInitializer/postMockData.json");
 
-    const { CONTENT } = req.query;
-    const queryObject = {};
-    let result = "";
-    if (CONTENT) {
-      queryObject.CONTENT = CONTENT;
-      result = await POSTS.find(queryObject).lean();
-    }
+    const search = req.query.search;
 
-    // // 노출할 모든 포스트의 정보(유저 정보 포함)를 비동기 리턴하는 함수 정의
-    // allPostsOnFeedArr = async () => {
-    //   // Promise.all & map 함수를 활용
-    //   const allPostsOnFeedArr = await Promise.all(
-    //     // 각 post 정보 하나하나에서 각 작성자 user_id로 유저 정보를 불러옴
-    //     allPostsOnFeed.map(async (post) => {
-    //       const writer = await USERS.findOne({ _id: post.USER_ID });
+    let result = await POSTS.find({}).lean();
 
-    //       return {
-    //         postInfo: {
-    //           _id: post._id,
-    //           CONTENT: post.CONTENT,
-    //           POST_PHOTO: post.POST_PHOTO,
-    //           TIMESTAMPS: post.TIMESTAMPS,
-    //         },
-    //         writerInfo: {
-    //           _id: writer._id,
-    //           DISPLAY_NAME: writer.DISPLAY_NAME,
-    //           PROFILE_PIC: writer.PROFILE_PIC,
-    //         },
-    //       };
-    //     })
-    //   );
-
-    //   return allPostsOnFeedArr;
-    // };
-
-    const returnArr = await POSTS.find({}).lean();
-
-    // res.status(200).json({
-    //   statusCode: 200,
-    //   data: {
-    //     display_name: req.user.DISPLAY_NAME,
-    //     image: req.user.PROFILE_PIC,
-    //     post: returnArr,
-    //     result,
-    //   },
-    // });
-
-    res.render("post", {
+    res.status(200).json({
       display_name: req.user.DISPLAY_NAME,
       image: req.user.PROFILE_PIC,
-      post: returnArr,
-      result,
+      post: result,
     });
 
     return;
   } catch (error) {
-    // const message = `${req.method} ${req.originalUrl} : ${error.message}`;
+    const message = `${req.method} ${req.originalUrl} : ${error.message}`;
 
     return res.send({
       statusCode: 400,
@@ -213,39 +169,46 @@ exports.searchPosts = async (req, res) => {
     // 로그인 유저가 팔로잉 하고 있는 모든 피드(포스트) 정보를 불러옴
     const { key: keyword } = req.query;
 
-    const allPostsToShow = await POSTS.find({ USER_ID: [...FOLLOWING, _id] });
-    // <----- (미완성 상태 )검색결과의 posts를 여기(allPostsToShow)에 주면, 아래에서 user 정보와 함께 return
+    const allPostsToShow = await POSTS.find({
+      CONTENT: { $regex: keyword, $options: "i" },
+    });
+    const findUserByEmail = await USERS.find({
+      EMAIL: { $regex: keyword, $options: "i" },
+    });
+    const users = findUserByEmail.map((element) => element.DISPLAY_NAME);
 
-    // 노출할 모든 포스트의 정보(유저 정보 포함)를 비동기 리턴하는 함수 정의
-    allPostsOnFeedArr = async () => {
-      // Promise.all & map 함수를 활용
-      const allPostsOnFeedArr = await Promise.all(
-        // 각 post 정보 하나하나에서 각 작성자 USER_ID 유저 정보를 불러옴
-        allPostsToShow.map(async (post) => {
-          const writer = await USERS.findOne({ _id: post.USER_ID });
+    // await // <----- (미완성 상태 )검색결과의 posts를 여기(allPostsToShow)에 주면, 아래에서 user 정보와 함께 return
 
-          return {
-            postInfo: {
-              _id: post._id,
-              CONTENT: post.CONTENT,
-              POST_PHOTO: post.POST_PHOTO,
-              TIMESTAMPS: post.TIMESTAMPS,
-            },
-            writerInfo: {
-              _id: writer._id,
-              DISPLAY_NAME: writer.DISPLAY_NAME,
-              PROFILE_PIC: writer.PROFILE_PIC,
-            },
-          };
-        })
-      );
+    // // 노출할 모든 포스트의 정보(유저 정보 포함)를 비동기 리턴하는 함수 정의
+    // allPostsOnFeedArr = async () => {
+    //   // Promise.all & map 함수를 활용
+    //   const allPostsOnFeedArr = await Promise.all(
+    //     // 각 post 정보 하나하나에서 각 작성자 USER_ID 유저 정보를 불러옴
+    //     allPostsToShow.map(async (post) => {
+    //       const writer = await USERS.findOne({ _id: post.USER_ID });
 
-      return allPostsOnFeedArr;
-    };
+    //       return {
+    //         postInfo: {
+    //           _id: post._id,
+    //           CONTENT: post.CONTENT,
+    //           POST_PHOTO: post.POST_PHOTO,
+    //           TIMESTAMPS: post.TIMESTAMPS,
+    //         },
+    //         writerInfo: {
+    //           _id: writer._id,
+    //           DISPLAY_NAME: writer.DISPLAY_NAME,
+    //           PROFILE_PIC: writer.PROFILE_PIC,
+    //         },
+    //       };
+    //     })
+    //   );
 
-    const returnArr = await allPostsOnFeedArr();
+    //   return allPostsOnFeedArr;
+    // };
 
-    res.status(200).json({ statusCode: 200, returnArr });
+    // const returnArr = await allPostsOnFeedArr();
+
+    res.status(200).json({ statusCode: 200, allPostsToShow, users });
     return;
   } catch (error) {
     const message = `${req.method} ${req.originalUrl} : ${error.message}`;

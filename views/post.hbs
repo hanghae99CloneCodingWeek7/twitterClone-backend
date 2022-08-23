@@ -1,15 +1,15 @@
 <h3>Welcome {{display_name}}</h3>
 
-<form action="/api/posts" method="get">
-  <input type="text" name="CONTENT" />
+<form action="/api/posts/search" method="get">
+  <input type="text" name="key"/>
   <button type="submit">검색</button>
 </form>
 
-{{#if result}}
+{{!-- {{#if result}}
   {{#each result}}
     <p>{{CONTENT}}</p>
   {{/each}}
-{{/if}}
+{{/if}} --}}
 <img src="{{image}}" />
 {{#each post as |value|}}
   <p>
