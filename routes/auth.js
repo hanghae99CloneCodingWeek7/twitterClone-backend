@@ -8,7 +8,7 @@ const { ensureGuest } = require("../middleware/auth");
 // router.route("/").get(ensureGuest, auth.mainPage);
 
 // TASK 2 : 회원가입
-// router.route("/signup").post(auth.registerDirect).get(auth.registerPage);
+router.route("/signup").post(auth.registerDirect);
 router.route("/google").get(auth.googleLogin);
 // router.route("/login").get(auth.loginPage);
 // router.route("/login").post(auth.login);
