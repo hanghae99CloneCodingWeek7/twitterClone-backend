@@ -2,28 +2,26 @@
 const POSTS = require("../schemas/post");
 const USERS = require("../schemas/user");
 
-const req = {
-  user: {
-    _id: "6302e14167f461a60d1605e9",
-    EMAIL: "abc@abc.com",
-    FIRST_NAME: "seungjun",
-    LAST_NAME: "lee",
-    PROFILE_PIC:
-      "https://t4.ftcdn.net/jpg/03/40/12/49/360_F_340124934_bz3pQTLrdFpH92ekknuaTHy8JuXgG7fi.jpg",
-    FOLLOWER: [
-      "630055fce3c4e17206ebec77",
-      "6300482f67dd88e22477039a",
-      "630056affde5db42c7dd4800",
-    ],
-    FOLLOWING: [
-      "630055fce3c4e17206ebec77",
-      "63004dfa1759949daf48394b",
-      "630056affde5db42c7dd4800",
-    ],
-    REGISTER_FROM: "web",
-    DISPLAY_NAME: "seungjun lee",
-    TIMESTAMPS: "2022-08-22T01:52:01.200+00:00",
-  },
+const user = {
+  _id: "6302e14167f461a60d1605e9",
+  EMAIL: "abc@abc.com",
+  FIRST_NAME: "seungjun",
+  LAST_NAME: "lee",
+  PROFILE_PIC:
+    "https://t4.ftcdn.net/jpg/03/40/12/49/360_F_340124934_bz3pQTLrdFpH92ekknuaTHy8JuXgG7fi.jpg",
+  FOLLOWER: [
+    "630055fce3c4e17206ebec77",
+    "6300482f67dd88e22477039a",
+    "630056affde5db42c7dd4800",
+  ],
+  FOLLOWING: [
+    "630055fce3c4e17206ebec77",
+    "63004dfa1759949daf48394b",
+    "630056affde5db42c7dd4800",
+  ],
+  REGISTER_FROM: "web",
+  DISPLAY_NAME: "seungjun lee",
+  TIMESTAMPS: "2022-08-22T01:52:01.200+00:00",
 };
 
 // ------------------
@@ -31,20 +29,19 @@ const req = {
 exports.getPostsAll = async (req, res) => {
   try {
     // 로그인 유저가 팔로잉 하고 있는 모든 피드(포스트) 정보를 불러옴
-    const { _id, FOLLOWING } = req.user;
-    // const allPostsOnFeed = await POSTS.find({
-    //   USER_ID: [...FOLLOWING, _id],
-    // }).lean();
+    const { _id, FOLLOWING } = user;
+    const allPostsOnFeed = await POSTS.find({
+      USER_ID: [...FOLLOWING, _id],
+    });
     // const allPostsOnFeed = require("../dataInitializer/postMockData.json");
 
-    const search = req.query.search;
-
-    let result = await POSTS.find({}).lean();
+    // const search = req.query.search;
+    // let result = await POSTS.find({}).lean();
 
     res.status(200).json({
-      display_name: req.user.DISPLAY_NAME,
-      image: req.user.PROFILE_PIC,
-      post: result,
+      display_name: user.DISPLAY_NAME,
+      image: user.PROFILE_PIC,
+      post: allPostsOnFeed,
     });
 
     return;
@@ -66,7 +63,7 @@ exports.createPostPage = async (req, res) => {
 
 exports.createPost = async (req, res) => {
   try {
-    const { _id, EMAIL } = req.user;
+    const { _id, EMAIL } = user;
 
     // 포스팅 작업
     const { CONTENT } = req.body;
@@ -74,7 +71,7 @@ exports.createPost = async (req, res) => {
       USER_ID: _id,
       USER_EMAIL: EMAIL,
       CONTENT,
-      // POST_PHOTO: POST_PHOTO_URL,
+      POST_PHOTO: "",
       TIMESTAMPS: new Date(),
     });
 
@@ -96,7 +93,7 @@ exports.createPost = async (req, res) => {
 // TASK 3 : 게시글 수정 with PUT ('/api/posts')
 exports.updatePost = async (req, res) => {
   try {
-    const { _id } = req.user;
+    const { _id } = user;
     const { post_id, CONTENT, POST_PHOTO_URL } = req.body;
 
     // 본인확인
@@ -146,7 +143,7 @@ exports.updatePost = async (req, res) => {
 // TASK 4 : 게시글 삭제 with DELETE ('/api/posts')
 exports.deletePost = async (req, res) => {
   try {
-    const { _id } = req.user;
+    const { _id } = user;
     const { post_id } = req.body;
 
     // 본인확인
