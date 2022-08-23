@@ -6,11 +6,11 @@ const authRouter = require("./auth.js");
 const postsRouter = require("./posts.js");
 const commentsRouter = require("./comments.js");
 const profilesRouter = require("./profiles.js");
-const { ensureAuth } = require("../middleware/auth");
+const authMiddleware = require("../middleware/auth");
 
-router.use("/posts", ensureAuth, [postsRouter]);
-router.use("/comments", ensureAuth, [commentsRouter]);
-router.use("/profiles", ensureAuth, [profilesRouter]);
+router.use("/posts", authMiddleware, [postsRouter]);
+router.use("/comments", authMiddleware, [commentsRouter]);
+router.use("/profiles", authMiddleware, [profilesRouter]);
 router.use("/", [authRouter]);
 
 // 이 파일에서 만든 router 객체를 외부에 공개 -> app.js에서 사용할 수 있도록

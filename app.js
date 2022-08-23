@@ -10,46 +10,47 @@ const Http = require("http");
 const Https = require("https");
 
 // 세션(로그인)
-const passport = require("passport");
-const session = require("express-session");
+const passportConfig = require("./config/passport");
+passportConfig();
+// const session = require("express-session");
 
 // view용 모듈 express-handlebars
-const exphbs = require("express-handlebars");
+// const exphbs = require("express-handlebars");
 
 const connectDB = require("./schemas");
 const mongoose = require("mongoose");
-const MongoStore = require("connect-mongo")(session);
+// const MongoStore = require("connect-mongo")(session);
 
 require("dotenv").config(); // 환경변수 모듈
-require("./config/passport")(passport); // passport config
+// require("./config/passport")(passport); // passport config
 
 // express 객체 선언, 각종 middleware 설치
 const app = express();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 // Handlebars
-app.engine(".hbs", exphbs.engine({ defaultLayout: "main", extname: ".hbs" }));
-app.set("view engine", ".hbs");
+// app.engine(".hbs", exphbs.engine({ defaultLayout: "main", extname: ".hbs" }));
+// app.set("view engine", ".hbs");
 
 // Static folder
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
-// sessions
-app.use(
-  session({
-    secret: process.env.MY_SECRET_KEY,
-    resave: false,
-    saveUninitialized: false,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
-  })
-);
+// // sessions
+// app.use(
+//   session({
+//     secret: process.env.MY_SECRET_KEY,
+//     resave: false,
+//     saveUninitialized: false,
+//     store: new MongoStore({ mongooseConnection: mongoose.connection }),
+//   })
+// );
 
 // Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // CORS OPTION 적용
 app.use(
