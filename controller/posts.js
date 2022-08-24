@@ -85,6 +85,7 @@ exports.createPostPage = async (req, res) => {
 };
 
 exports.createPost = async (req, res) => {
+  const user = res.locals.user;
   try {
     const { _id, EMAIL } = user;
 
