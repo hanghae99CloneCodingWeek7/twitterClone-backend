@@ -25,6 +25,22 @@ require("./config/passport")(passport); // passport config
 
 // express 객체 선언, 각종 middleware 설치
 const app = express();
+
+// CORS OPTION 적용
+app.use(
+  cors({
+    origin: [
+      "http://www.myspaceti.me",
+      "https://www.myspaceti.me",
+      "http://localhost:3000",
+      "http://localhost:8002",
+      "https://localhost",
+      "http://nodeapi.myspaceti.me:8002",
+    ],
+    credentials: true,
+  })
+);
+
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -55,22 +71,6 @@ app.use(
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
-
-// CORS OPTION 적용
-app.use(
-  cors({
-    origin: [
-      "http://www.myspaceti.me",
-      "https://www.myspaceti.me",
-      "http://localhost:3000",
-      "http://localhost:8002",
-      "https://localhost",
-      "http://nodeapi.myspaceti.me:8002",
-      true,
-    ],
-    credentials: true,
-  })
-);
 
 // "/api" path로 연결하는 라우터 연결 (우선 routes/index.js로)
 const indexRouter = require("./routes/index.js");

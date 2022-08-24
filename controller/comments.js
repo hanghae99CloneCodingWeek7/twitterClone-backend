@@ -38,7 +38,7 @@ exports.createComments = async (req, res) => {
   try {
     const { postId } = req.params;
     const { CONTENT } = req.body;
-    const { _id } = req.user;
+    const { _id } = res.locals.user;
     // const _id = "63004dfa1759949daf48394b";
 
     if (!CONTENT) {
@@ -65,7 +65,7 @@ exports.createComments = async (req, res) => {
 // 댓글 수정
 exports.updateComments = async (req, res) => {
   try {
-    const { _id } = req.user;
+    const { _id } = res.locals.user;
     const { comment_Id, CONTENT } = req.body;
     console.log(_id);
     const commentExist = await COMMENTS.findOne({ _id: comment_Id });
@@ -113,7 +113,7 @@ exports.updateComments = async (req, res) => {
 // 댓글 삭제
 exports.deleteComments = async (req, res) => {
   try {
-    const { _id } = req.user;
+    const { _id } = res.locals.user;
     const { comment_Id } = req.body;
 
     const commentExist = await COMMENTS.findOne({ _id: comment_Id });
