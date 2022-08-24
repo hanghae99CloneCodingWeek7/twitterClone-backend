@@ -33,4 +33,9 @@ router.get("/google/callback", auth.googleCallback);
 //   });
 // });
 
+router.post("/submitTest", async (req, res) => {
+  const name = req.body;
+  res.send(name);
+});
+
 module.exports = router;
