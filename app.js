@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 
 const Http = require("http");
 const Https = require("https");
+const fileUpload = require("express-fileupload");
 
 // 세션(로그인)
 const passportConfig = require("./config/passport");
