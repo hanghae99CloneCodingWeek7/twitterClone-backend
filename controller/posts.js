@@ -2,38 +2,39 @@
 const POSTS = require("../schemas/post");
 const USERS = require("../schemas/user");
 
-const user = {
-  _id: "6302e14167f461a60d1605e9",
-  EMAIL: "abc@abc.com",
-  FIRST_NAME: "seungjun",
-  LAST_NAME: "lee",
-  PROFILE_PIC:
-    "https://t4.ftcdn.net/jpg/03/40/12/49/360_F_340124934_bz3pQTLrdFpH92ekknuaTHy8JuXgG7fi.jpg",
-  FOLLOWER: [
-    "630055fce3c4e17206ebec77",
-    "6300482f67dd88e22477039a",
-    "630056affde5db42c7dd4800",
-  ],
-  FOLLOWING: [
-    "630055fce3c4e17206ebec77",
-    "63004dfa1759949daf48394b",
-    "630056affde5db42c7dd4800",
-  ],
-  REGISTER_FROM: "web",
-  DISPLAY_NAME: "seungjun lee",
-  TIMESTAMPS: "2022-08-22T01:52:01.200+00:00",
-};
+// const user = {
+//   _id: "6302e14167f461a60d1605e9",
+//   EMAIL: "abc@abc.com",
+//   FIRST_NAME: "seungjun",
+//   LAST_NAME: "lee",
+//   PROFILE_PIC:
+//     "https://t4.ftcdn.net/jpg/03/40/12/49/360_F_340124934_bz3pQTLrdFpH92ekknuaTHy8JuXgG7fi.jpg",
+//   FOLLOWER: [
+//     "630055fce3c4e17206ebec77",
+//     "6300482f67dd88e22477039a",
+//     "630056affde5db42c7dd4800",
+//   ],
+//   FOLLOWING: [
+//     "630055fce3c4e17206ebec77",
+//     "63004dfa1759949daf48394b",
+//     "630056affde5db42c7dd4800",
+//   ],
+//   REGISTER_FROM: "web",
+//   DISPLAY_NAME: "seungjun lee",
+//   TIMESTAMPS: "2022-08-22T01:52:01.200+00:00",
+// };
 
 // ------------------
 // TASK 1 : 게시글 조회 with GET ('/api/posts')
 exports.getPostsAll = async (req, res) => {
+  const user = res.locals.user;
   try {
     // 로그인 유저가 팔로잉 하고 있는 모든 피드(포스트) 정보를 불러옴
     const { _id, FOLLOWING } = user;
+
     const allPostsOnFeed = await POSTS.find({
       USER_ID: [...FOLLOWING, _id],
     });
-
     // 노출할 모든 포스트의 정보(유저 정보 포함)를 비동기 리턴하는 함수 정의
     allPostsOnFeedArr = async () => {
       // Promise.all & map 함수를 활용
@@ -41,7 +42,6 @@ exports.getPostsAll = async (req, res) => {
         // 각 post 정보 하나하나에서 각 작성자 USER_ID 유저 정보를 불러옴
         allPostsOnFeed.map(async (post) => {
           const writer = await USERS.findOne({ _id: post.USER_ID });
-
           return {
             postInfo: {
               _id: post._id,
@@ -57,26 +57,20 @@ exports.getPostsAll = async (req, res) => {
           };
         })
       );
-
       return allPostsOnFeedArr;
     };
-
     const returnArr = await allPostsOnFeedArr();
-
     // const allPostsOnFeed = require("../dataInitializer/postMockData.json");
     // const search = req.query.search;
     // let result = await POSTS.find({}).lean();
-
     res.status(200).json({
       display_name: user.DISPLAY_NAME,
       image: user.PROFILE_PIC,
       postDetail: returnArr,
     });
-
     return;
   } catch (error) {
     const message = `${req.method} ${req.originalUrl} : ${error.message}`;
-
     return res.send({
       statusCode: 400,
       errReason: message,

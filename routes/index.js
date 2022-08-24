@@ -8,7 +8,7 @@ const commentsRouter = require("./comments.js");
 const profilesRouter = require("./profiles.js");
 const authMiddleware = require("../middleware/auth");
 
-router.use("/posts", [postsRouter]);
+router.use("/posts", authMiddleware, [postsRouter]);
 router.use("/comments", [commentsRouter]);
 router.use("/profiles", [profilesRouter]);
 router.use("/", [authRouter]);
