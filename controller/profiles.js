@@ -114,6 +114,7 @@ exports.userFollowedBy = async (req, res) => {
     const { FOLLOWER } = await USERS.findOne({ _id: _id.toString() });
 
     // 이들의 정보를 받음,
+
     const whomUserFollows = await USERS.find({
       _id: FOLLOWER,
     });
@@ -271,6 +272,33 @@ exports.searchProfiles = async (req, res) => {
   try {
     // 내 프로필 정보 수정
     res.status(201).json({ statusCode: 201 });
+    return;
+  } catch (error) {
+    const message = `${req.method} ${req.originalUrl} : ${error.message}`;
+    console.log(message);
+    return res.send({
+      statusCode: 400,
+      errReason: message,
+    });
+  }
+};
+
+// TASK 9 : 팔로우할 프로필 추천
+exports.whoTofollow = async (req, res) => {
+  try {
+    // const user = res.locals.user;
+    const usersTofollow = await USERS.find({}).sort({ TIMESTAMPS: -1 });
+    const topTenToFollow = usersTofollow.slice(0, 10);
+
+    const resultData = topTenToFollow.map((e) => {
+      return {
+        _id: e._id,
+        DISPLAY_NAME: e.DISPLAY_NAME,
+        PROFILE_PIC: e.PROFILE_PIC,
+      };
+    });
+
+    res.status(201).json({ statusCode: 201, resultData });
     return;
   } catch (error) {
     const message = `${req.method} ${req.originalUrl} : ${error.message}`;
