@@ -30,12 +30,7 @@ exports.getPostsAll = async (req, res) => {
   const user = res.locals.user;
   try {
     // 로그인 유저가 팔로잉 하고 있는 모든 피드(포스트) 정보를 불러옴
-<<<<<<< HEAD
-    const { _id, FOLLOWING } = res.locals.user;
-=======
     const { _id, FOLLOWING } = user;
-
->>>>>>> 272e64e26502b19bab9726861f2ff3a7dd68112f
     const allPostsOnFeed = await POSTS.find({
       USER_ID: [...FOLLOWING, _id],
     });
