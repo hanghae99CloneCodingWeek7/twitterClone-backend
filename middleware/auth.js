@@ -2,27 +2,21 @@ const jwt = require("jsonwebtoken");
 const User = require("../schemas/user");
 
 module.exports = async (req, res, next) => {
-  const { Authorization } = req.headers;
-  const [type, token] = (Authorization || "").split(" ");
+  const { authorization } = req.headers;
+  const [type, token] = (authorization || "").split(" ");
+
   //인증 Bearer타입
   if (!token || type !== "Bearer") {
-    res.status(401).json({ message: "로그인 후 사용이 가능합니다." });
+    return res.status(401).json({ message: "로그인 후 사용이 가능합니다." });
   }
-
+  const payload = jwt.verify(token, process.env.TOKEN_KEY);
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-
-    await User.findIdxById(payload.userId, (err, data) => {
-      if (err) {
-        return res.status(403).json({ message: "사용자 인증 오류" });
-      }
-      //req.user = data[0].USER_IDX;
-      res.locals.user = data[0];
-
+    await User.findOne({ EMAIL: payload.email }).then((user) => {
+      res.locals.user = user;
       next();
     });
   } catch (error) {
-    return res.status(403).json({ message: "사용자 인증 오류" });
+    res.status(401).send({ message: "사용자 인증 오류" });
   }
 };
 // module.exports = {
