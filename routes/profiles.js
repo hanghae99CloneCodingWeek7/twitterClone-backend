@@ -13,6 +13,8 @@ router.put("/follow/:_id", profiles.followAction);
 router.put("/unfollow/:_id", profiles.unfollowAction);
 // TASK 8 : 프로필을 검색하여, 리스트로 보기
 router.get("/search", profiles.searchProfiles);
+// TASK 9 : 팔로우할 프로필 추천
+router.get("/whoTofollow", profiles.whoTofollow);
 // TASK 3 : _id를 가진 유저가 팔로잉 하는 유저들의 리스트
 router.get("/:_id/followings", profiles.userFollows);
 // TASK 4 : _id를 가진 유저를 팔로잉 하는 유저들의 리스트
