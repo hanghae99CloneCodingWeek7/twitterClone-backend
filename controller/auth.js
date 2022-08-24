@@ -150,11 +150,20 @@ exports.submitTest = (req, res) => {
   // const name = req.body;
   // const file = req.files.file;
   // const fileName = file.name;
+  if (req.files === null) {
+    return res.status(400).json({ msg: "No file uploaded" });
+  }
+
   const file = req.files.file;
   const fileName = file.name;
+  file.mv(`${__dirname}/public/uploads/${fileName}`, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send(err);
+    }
 
-  console.log(req);
-  res.send(file.name);
+    res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
+  });
   // res.send(file);
 };
 
