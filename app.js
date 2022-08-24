@@ -26,6 +26,7 @@ require("dotenv").config(); // 환경변수 모듈
 
 // express 객체 선언, 각종 middleware 설치
 const app = express();
+app.use(fileUpload());
 
 // CORS OPTION 적용
 app.use(
