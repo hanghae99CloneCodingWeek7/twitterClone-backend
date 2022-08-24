@@ -33,12 +33,6 @@ router.get("/google/callback", auth.googleCallback);
 //   });
 // });
 
-router.route("/submitTest", async (req, res) => {
-  const file = req.files.file;
-  const fileName = file.name;
-
-  console.log(file);
-  res.send(file);
-});
+router.route("/submitTest").post(auth.submitTest);
 
 module.exports = router;

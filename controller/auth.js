@@ -145,6 +145,19 @@ exports.googleCallback = (req, res, next) => {
   }
 };
 
+//testing
+exports.submitTest = (req, res) => {
+  // const name = req.body;
+  // const file = req.files.file;
+  // const fileName = file.name;
+  const file = req.files.file;
+  const fileName = file.name;
+
+  console.log(req);
+  res.send(file.name);
+  // res.send(file);
+};
+
 // exports.login = async (req, res) => {
 //   const loginSchema = Joi.object({
 //     EMAIL: Joi.string().email().required(),
