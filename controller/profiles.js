@@ -289,7 +289,7 @@ exports.searchProfiles = async (req, res) => {
 exports.whoTofollow = async (req, res) => {
   try {
     // const user = res.locals.user;
-    const usersTofollow = await USERS.find({}).sort({ TIMESTAMPS: -1 });
+    const usersTofollow = await USERS.find({}).sort({ TIMESTAMPS: 1 });
     const topTenToFollow = usersTofollow.slice(0, 10);
 
     const resultData = topTenToFollow.map((e) => {
