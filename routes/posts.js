@@ -14,7 +14,7 @@ router.post("/create", posts.createPost);
 // TASK 3 : 게시글 수정 with PUT ('/api/posts')
 router.put("/", posts.updatePost);
 // TASK 4 : 게시글 삭제 with DELETE ('/api/posts')
-router.delete("/", posts.deletePost);
+router.delete("/:post_id", posts.deletePost);
 // TASK 5 : 게시글 검색
 router.get("/search", posts.searchPosts);
 

@@ -167,8 +167,8 @@ exports.updatePost = async (req, res) => {
 exports.deletePost = async (req, res) => {
   try {
     const { _id } = res.locals.user;
-    const { post_id } = req.body;
-
+    const { post_id } = req.params;
+    console.log(req.params);
     // 본인확인
     const postExist = await POSTS.findOne({ _id: post_id });
     const foundPost = await POSTS.findOne({ _id: post_id, USER_ID: _id });
