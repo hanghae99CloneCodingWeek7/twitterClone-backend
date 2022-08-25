@@ -164,7 +164,6 @@ exports.submitTest = (req, res) => {
 
     res.json({ fileName: file.name, filePath: `/uploads/${file.name}` });
   });
-  // res.send(file);
 };
 
 // exports.login = async (req, res) => {
