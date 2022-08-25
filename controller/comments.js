@@ -53,7 +53,7 @@ exports.createComments = async (req, res) => {
       TIMESTAMPS: new Date(),
     });
     // await COMMENTS.create({ post_id: postId, USER_ID: _id, CONTENT, TIMESTAMPS: new Date() });
-    res.status(201).redirect("/api");
+    res.status(201).json({ message: "댓글을 작성했습니다." });
     //   .json({ statusCode: 201, createdComment_id: createdComment.id });
   } catch (error) {
     const message = `${req.method} ${req.originalUrl} : ${error.message}`;

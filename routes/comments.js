@@ -7,7 +7,7 @@ const auth = require("../controller/auth");
 
 // TASK 2 : 댓글 작성 with POST ('/api/comments')
 router.get("/create", comments.createCommentsPage);
-router.post("/create/:postId", comments.createComments);
+router.post("/:postId/create", comments.createComments);
 // TASK 1 : 댓글 조회 with GET ('/api/comments')
 router.get("/:postId", comments.getAllComments);
 // TASK 3 : 댓글 수정 with POST ('/api/comments')
