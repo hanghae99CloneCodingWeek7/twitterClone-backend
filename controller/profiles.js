@@ -141,10 +141,10 @@ exports.userFollowedBy = async (req, res) => {
 exports.followAction = async (req, res) => {
   try {
     const user = res.locals.user;
-    console.user("followAction user", user);
+    console.log("followAction user", user);
     // const user = await USERS.findOne({ _id: "630055fce3c4e17206ebec77" });
     const { _id } = req.params;
-    console.user("followAction _id", _id);
+    console.log("followAction _id", _id);
 
     // 유저가 현재 팔로우하는 사람에 한명 추가
     const newFollowing = Array.from(
