@@ -45,7 +45,6 @@ exports.updateProfile = async (req, res) => {
   try {
     const { _id } = res.locals.user;
     // 내 프로필 정보 수정
-
     const { FIRST_NAME, LAST_NAME, PROFILE_PIC, DISPLAY_NAME } = req.body;
 
     // update 작업
@@ -142,8 +141,10 @@ exports.userFollowedBy = async (req, res) => {
 exports.followAction = async (req, res) => {
   try {
     const user = res.locals.user;
+    console.user("followAction user", user);
     // const user = await USERS.findOne({ _id: "630055fce3c4e17206ebec77" });
     const { _id } = req.params;
+    console.user("followAction _id", _id);
 
     // 유저가 현재 팔로우하는 사람에 한명 추가
     const newFollowing = Array.from(
@@ -152,6 +153,7 @@ exports.followAction = async (req, res) => {
 
     // 특정유저(_id)의 현재 팔로어에 한명 추가
     const { FOLLOWER } = await USERS.findOne({ _id: _id });
+    console.log("FOLLOWER", FOLLOWER);
     const newFollower = Array.from(new Set([...FOLLOWER, user._id.toString()]));
 
     // 우선 로그인유저 FOLLOWING에 새로운 _id 하나 추가

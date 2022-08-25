@@ -28,6 +28,7 @@ const USERS = require("../schemas/user");
 // TASK 1 : 게시글 조회 with GET ('/api/posts')
 exports.getPostsAll = async (req, res) => {
   const user = res.locals.user;
+
   try {
     // 로그인 유저가 팔로잉 하고 있는 모든 피드(포스트) 정보를 불러옴
     const { _id, FOLLOWING } = user;
@@ -62,6 +63,7 @@ exports.getPostsAll = async (req, res) => {
     // const allPostsOnFeed = require("../dataInitializer/postMockData.json");
     // const search = req.query.search;
     // let result = await POSTS.find({}).lean();
+    console.log("res.locals.user", res.locals.user);
     res.status(200).json({
       display_name: res.locals.user.DISPLAY_NAME,
       image: res.locals.user.PROFILE_PIC,
